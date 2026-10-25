@@ -90,7 +90,7 @@
     <!-- НОВАЯ ШАПКА С ЛОГОТИПОМ -->
     <header class="max-w-3xl mx-auto mb-4">
         <div class="glass-card rounded-2xl px-4 py-3 flex items-center justify-between">
-                       <a href="index.html" class="flex items-center gap-2.5 group">
+                                   <a href="index.html" onclick="if(window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) { event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }" class="flex items-center gap-2.5 group">
                 <!-- Логотип-компас -->
                 <svg class="w-9 h-9 transition group-hover:rotate-45" style="color: #d4af37;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
