@@ -160,7 +160,74 @@
                 </button>
             </div>
         </section>
-
+<!-- 3. ЧЕК-ИН -->
+        <section class="glass-card rounded-3xl p-5 sm:p-7">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Как ты?</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Как прошёл твой день? Елена или Тимур подскажут, на что опереться.</p>
+                </div>
+                <span id="checkin-status-badge" class="text-[11px] text-gray-400 bg-white/5 px-3 py-1 rounded-full self-start sm:self-center">Выбери состояние</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button onclick="selectMood('energy')" id="mood-btn-energy" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🔋</span>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Есть силы</div><div class="text-[11px] text-gray-400">Готов действовать</div></div>
+                </button>
+                <button onclick="selectMood('autopilot')" id="mood-btn-autopilot" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">😶</span>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div><div class="text-[11px] text-gray-400">Нет ресурса</div></div>
+                </button>
+                <button onclick="selectMood('anxiety')" id="mood-btn-anxiety" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🌪</span>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Тревожно</div><div class="text-[11px] text-gray-400">Мысли скачут</div></div>
+                </button>
+                <button onclick="selectMood('money')" id="mood-btn-money" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">💸</span>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div><div class="text-[11px] text-gray-400">До стипендии</div></div>
+                </button>
+            </div>
+            <div id="curator-checkin-response" class="hidden mt-5 pt-5 border-t border-white/10 animate-fade-slide">
+                <div class="glass-card-gold rounded-2xl p-4 sm:p-5">
+                    <div class="flex items-start gap-3.5">
+                        <div id="curator-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h3 id="curator-name" class="text-sm font-bold text-white">Елена Осинцева</h3>
+                                    <p id="curator-role" class="text-[11px] text-gold">Психологическая опора</p>
+                                </div>
+                            </div>
+                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">Слышу тебя.</p>
+                            <div class="mt-4 bg-bgDeep/90 border border-white/10 rounded-xl p-3">
+                                <div class="flex items-center justify-between gap-3">
+                                    <button onclick="toggleVoicePill()" id="voice-play-btn" class="w-9 h-9 rounded-xl bg-gold text-bgDeep flex items-center justify-center shrink-0 hover:bg-goldLight transition active:scale-95">
+                                        <svg id="voice-icon-play" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13l11-6.5-11-6.5z"/></svg>
+                                        <svg id="voice-icon-pause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" clip-rule="evenodd"/></svg>
+                                    </button>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between text-[11px] mb-1">
+                                            <span id="voice-pill-title" class="font-semibold text-gold truncate">🎧 Голосовая заметка</span>
+                                            <span id="voice-timer" class="text-gray-400 font-mono">0:45</span>
+                                        </div>
+                                        <div id="voice-waveform" class="flex items-center gap-1 h-6 overflow-hidden">
+                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
+                                    <span id="voice-transcript-text">«Положи стопы на пол...»</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+                                <a id="curator-action-link" href="breathing.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
+                                    <span id="curator-action-text">🌿 Включить дыхание</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <!-- 1.5. МИССИЯ + ГОЛОС ДНЯ -->
         <section class="space-y-3">
 
@@ -257,74 +324,7 @@
             </div>
         </section>
 
-        <!-- 3. ЧЕК-ИН -->
-        <section class="glass-card rounded-3xl p-5 sm:p-7">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                <div>
-                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Чек-ин состояния: как ты?</h2>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Елена или Тимур подскажут, на что опереться.</p>
-                </div>
-                <span id="checkin-status-badge" class="text-[11px] text-gray-400 bg-white/5 px-3 py-1 rounded-full self-start sm:self-center">Выбери состояние</span>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="selectMood('energy')" id="mood-btn-energy" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🔋</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Есть силы</div><div class="text-[11px] text-gray-400">Готов действовать</div></div>
-                </button>
-                <button onclick="selectMood('autopilot')" id="mood-btn-autopilot" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">😶</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div><div class="text-[11px] text-gray-400">Нет ресурса</div></div>
-                </button>
-                <button onclick="selectMood('anxiety')" id="mood-btn-anxiety" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🌪</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Тревожно</div><div class="text-[11px] text-gray-400">Мысли скачут</div></div>
-                </button>
-                <button onclick="selectMood('money')" id="mood-btn-money" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">💸</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div><div class="text-[11px] text-gray-400">До стипендии</div></div>
-                </button>
-            </div>
-            <div id="curator-checkin-response" class="hidden mt-5 pt-5 border-t border-white/10 animate-fade-slide">
-                <div class="glass-card-gold rounded-2xl p-4 sm:p-5">
-                    <div class="flex items-start gap-3.5">
-                        <div id="curator-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex flex-wrap items-center justify-between gap-2">
-                                <div>
-                                    <h3 id="curator-name" class="text-sm font-bold text-white">Елена Осинцева</h3>
-                                    <p id="curator-role" class="text-[11px] text-gold">Психологическая опора</p>
-                                </div>
-                            </div>
-                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">Слышу тебя.</p>
-                            <div class="mt-4 bg-bgDeep/90 border border-white/10 rounded-xl p-3">
-                                <div class="flex items-center justify-between gap-3">
-                                    <button onclick="toggleVoicePill()" id="voice-play-btn" class="w-9 h-9 rounded-xl bg-gold text-bgDeep flex items-center justify-center shrink-0 hover:bg-goldLight transition active:scale-95">
-                                        <svg id="voice-icon-play" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13l11-6.5-11-6.5z"/></svg>
-                                        <svg id="voice-icon-pause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" clip-rule="evenodd"/></svg>
-                                    </button>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between text-[11px] mb-1">
-                                            <span id="voice-pill-title" class="font-semibold text-gold truncate">🎧 Голосовая заметка</span>
-                                            <span id="voice-timer" class="text-gray-400 font-mono">0:45</span>
-                                        </div>
-                                        <div id="voice-waveform" class="flex items-center gap-1 h-6 overflow-hidden">
-                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
-                                    <span id="voice-transcript-text">«Положи стопы на пол...»</span>
-                                </div>
-                            </div>
-                            <div class="mt-4 flex flex-wrap items-center gap-2.5">
-                                <a id="curator-action-link" href="breathing.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
-                                    <span id="curator-action-text">🌿 Включить дыхание</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
         </section>
 
         <!-- 4. МИКРО-ПРИВЫЧКИ -->
