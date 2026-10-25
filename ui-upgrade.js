@@ -7,9 +7,10 @@
   const style = document.createElement('style');
   style.textContent = `
       /* Универсальная шапка */
-    .unified-header {
-      max-width: 768px;
-      margin: 0 auto 24px auto;
+     .unified-header {
+      max-width: 768px !important;
+      width: calc(100% - 32px) !important;
+      margin: 12px auto 24px auto !important;
       background: var(--card) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
