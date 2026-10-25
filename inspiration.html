@@ -9,23 +9,24 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
 <meta name="mobile-web-app-capable" content="yes" />
-<link rel="apple-mobile-web-app-capable" content="yes" />
-<link rel="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<link rel="apple-mobile-web-app-title" content="Точка опоры" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Точка опоры" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
 <style>
-  /* Базовые переменные (Темная тема по умолчанию) */
+  /* Базовые переменные */
   :root { 
     --bg: #0f1115; --bg-2: #161920; --card: rgba(22,25,32,0.88); 
     --text: #f3f4f6; --muted: #a1a1b5; --stroke: rgba(255,255,255,0.09); 
     --accent: #d4af37; --accent-glow: rgba(212,175,55,0.3); 
   }
   
-  /* Базовая поддержка светлой темы (если ui-upgrade.js затупит) */
+  /* Светлая тема */
   [data-theme="light"] { 
     --bg: #F6F4FB; --bg-2: #EDE9F7; --card: #ffffff; 
     --text: #171233; --muted: #4A4266; --stroke: rgba(20,10,50,0.12); 
@@ -54,22 +55,6 @@
   
   .section-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin: 28px 0 6px; padding: 0 4px; }
   .section-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; padding: 0 4px; }
-
-  /* --- ЖЕСТКАЯ ЗАЩИТА ШАПКИ ОТ РАСТЯГИВАНИЯ --- */
-  header, .unified-header {
-    max-width: 768px !important;
-    margin: 12px auto 24px auto !important;
-    width: calc(100% - 32px) !important;
-    display: block;
-  }
-  header svg, .unified-logo-icon {
-    width: 36px !important;
-    height: 36px !important;
-    max-width: 36px !important;
-    max-height: 36px !important;
-    flex-shrink: 0 !important;
-  }
-  /* --------------------------------------------- */
 
   .audio-cards { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
   .audio-card { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 18px; background: var(--card); border: 1px solid var(--stroke); text-decoration: none; color: var(--text); transition: 0.2s; }
