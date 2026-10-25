@@ -38,31 +38,60 @@
       --rose: #fb7185;
       --accent-2: #f59e0b; --accent-3: #fbbf24; --mod: #f59e0b;
       --accent2: #78350f;
-          /* ===== Читаемость в светлой теме ===== */
-    [data-theme="light"] .text-white,
-    [data-theme="light"] .text-gray-100,
-    [data-theme="light"] .text-gray-200 { color: var(--text) !important; }
-
-    [data-theme="light"] .text-gray-300,
-    [data-theme="light"] .text-gray-400,
-    [data-theme="light"] .text-gray-500 { color: var(--muted) !important; }
-
-    [data-theme="light"] .text-gold,
-    [data-theme="light"] .text-goldLight { color: var(--accent) !important; }
-
-    [data-theme="light"] [class*="bg-bgDeep"] { background-color: var(--bg-2) !important; }
-    [data-theme="light"] [class*="bg-bgCard"] { background-color: var(--card) !important; }
-    [data-theme="light"] [class*="bg-white\/"] { background-color: rgba(23,18,51,0.05) !important; }
-    [data-theme="light"] [class*="border-white\/"] { border-color: var(--stroke) !important; }
-
-    /* Чуть темнее золотые обводки, чтобы читались на светлом */
-    [data-theme="light"] [class*="border-gold\/"] {
-      border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+              /* ===== ЖЁСТКИЙ ФИКС СВЕТЛОЙ ТЕМЫ ===== */
+    [data-theme="light"] {
+      --bg: #F6F4FB; --bg-2: #ffffff; --card: #ffffff;
+      --text: #171233; --muted: #4A4266; --stroke: rgba(20,10,50,0.12);
     }
 
-    /* Input / textarea в светлой теме */
+    /* Убиваем тёмные фоны карточек и кнопок в светлой теме */
+    [data-theme="light"] [class*="bg-bgDeep"],
+    [data-theme="light"] [class*="bg-bgCard"],
+    [data-theme="light"] .mood-btn,
+    [data-theme="light"] #habits-list > div,
+    [data-theme="light"] .glass-card {
+      background-color: #ffffff !important;
+      border-color: rgba(20,10,50,0.12) !important;
+      box-shadow: 0 4px 15px rgba(40,20,90,0.05) !important;
+    }
+
+    /* Инпуты в светлой теме */
+    [data-theme="light"] input,
+    [data-theme="light"] textarea {
+      background-color: #ffffff !important;
+      color: #171233 !important;
+      border-color: rgba(20,10,50,0.15) !important;
+    }
     [data-theme="light"] input::placeholder,
-    [data-theme="light"] textarea::placeholder { color: #8A82A8 !important; }
+    [data-theme="light"] textarea::placeholder {
+      color: #8A82A8 !important;
+    }
+
+    /* Весь белый и серый текст делаем тёмным */
+    [data-theme="light"] .text-white,
+    [data-theme="light"] .text-gray-100,
+    [data-theme="light"] .text-gray-200,
+    [data-theme="light"] .text-gray-300,
+    [data-theme="light"] .text-gray-400,
+    [data-theme="light"] .text-gray-500 {
+      color: #171233 !important;
+    }
+    
+    /* Но серый (muted) чуть светлее основного */
+    [data-theme="light"] .text-gray-400,
+    [data-theme="light"] .text-gray-500 {
+      color: #4A4266 !important;
+    }
+
+    /* Акценты не трогаем (золото/фиолет) */
+    [data-theme="light"] .text-gold { color: var(--accent) !important; }
+
+    /* Внутренние блоки (например, голосовая заметка) */
+    [data-theme="light"] .glass-card-gold,
+    [data-theme="light"] .bg-black\/40,
+    [data-theme="light"] [class*="bg-black"] {
+      background-color: #F8F6FC !important;
+      border-color: rgba(20,10,50,0.1) !important;
     }
 
     /* ===== БАЗА ===== */
