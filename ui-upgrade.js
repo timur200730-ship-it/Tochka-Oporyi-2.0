@@ -17,7 +17,7 @@
     }
     [data-theme="light"] {
       --bg: #F6F4FB; --bg-2: #EDE9F7; --card: rgba(255,255,255,0.9);
-      --text: #171233; --muted: #6B6390; --stroke: rgba(20,10,50,0.1);
+      --text: #171233; --muted: #4A4266; --stroke: rgba(20,10,50,0.1);
       --accent: #8B7CF6; --accent-glow: rgba(139,124,246,0.3);
       --rose: #e11d48;
       --accent-2: #8B7CF6; --accent-3: #b8a6ff; --mod: #8B7CF6;
@@ -38,6 +38,31 @@
       --rose: #fb7185;
       --accent-2: #f59e0b; --accent-3: #fbbf24; --mod: #f59e0b;
       --accent2: #78350f;
+          /* ===== Читаемость в светлой теме ===== */
+    [data-theme="light"] .text-white,
+    [data-theme="light"] .text-gray-100,
+    [data-theme="light"] .text-gray-200 { color: var(--text) !important; }
+
+    [data-theme="light"] .text-gray-300,
+    [data-theme="light"] .text-gray-400,
+    [data-theme="light"] .text-gray-500 { color: var(--muted) !important; }
+
+    [data-theme="light"] .text-gold,
+    [data-theme="light"] .text-goldLight { color: var(--accent) !important; }
+
+    [data-theme="light"] [class*="bg-bgDeep"] { background-color: var(--bg-2) !important; }
+    [data-theme="light"] [class*="bg-bgCard"] { background-color: var(--card) !important; }
+    [data-theme="light"] [class*="bg-white\/"] { background-color: rgba(23,18,51,0.05) !important; }
+    [data-theme="light"] [class*="border-white\/"] { border-color: var(--stroke) !important; }
+
+    /* Чуть темнее золотые обводки, чтобы читались на светлом */
+    [data-theme="light"] [class*="border-gold\/"] {
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+    }
+
+    /* Input / textarea в светлой теме */
+    [data-theme="light"] input::placeholder,
+    [data-theme="light"] textarea::placeholder { color: #8A82A8 !important; }
     }
 
     /* ===== БАЗА ===== */
