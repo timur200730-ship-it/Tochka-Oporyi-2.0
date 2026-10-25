@@ -231,6 +231,7 @@
   toolsPopup.className = 'tools-popup';
   toolsPopup.innerHTML = `
     <a href="breathing.html">🌿 Дыхание</a>
+    <a href="inspiration.html">🎬 Вдохновение</a>
     <a href="budget.html">💰 Бюджет</a>
     <a href="balance-wheel.html">🎡 Колесо</a>
     <a href="challenges.html">🏆 Челленджи</a>
