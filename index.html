@@ -145,32 +145,50 @@
             </div>
         </section>
 
-        <!-- 2. МОДУЛИ (ДОБАВЛЕНО ССЫЛКИ) -->
-        <section class="space-y-3">
+              <!-- 2. МОДУЛИ -->
+        <section id="modules" class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">Три модуля</h2>
                 <span class="text-xs text-gold">Полное погружение</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <a href="module-fin.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-row sm:flex-col items-center sm:items-start gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">💰</div>
+                <!-- Финансы -->
+                <a href="module-fin.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">💰</div>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider" id="progText-fin">0 / 8</span>
+                    </div>
                     <div>
                         <h3 class="text-sm font-bold text-white group-hover:text-gold transition">Финансы</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Бюджет и накопления</p>
+                        <div class="w-full h-1.5 bg-bgDeep rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-gold transition-all duration-500" id="prog-fin" style="width: 0%"></div>
+                        </div>
                     </div>
                 </a>
-                <a href="module-psy.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-row sm:flex-col items-center sm:items-start gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🧠</div>
+                <!-- Психология -->
+                <a href="module-psy.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🧠</div>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider" id="progText-psy">0 / 8</span>
+                    </div>
                     <div>
                         <h3 class="text-sm font-bold text-white group-hover:text-gold transition">Психология</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Тревога и выгорание</p>
+                        <div class="w-full h-1.5 bg-bgDeep rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-gold transition-all duration-500" id="prog-psy" style="width: 0%"></div>
+                        </div>
                     </div>
                 </a>
-                <a href="module-sup.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-row sm:flex-col items-center sm:items-start gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🆘</div>
+                <!-- Поддержка -->
+                <a href="module-sup.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🆘</div>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider" id="progText-sup">0 / 6</span>
+                    </div>
                     <div>
                         <h3 class="text-sm font-bold text-white group-hover:text-gold transition">Поддержка</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Права и помощь</p>
+                        <div class="w-full h-1.5 bg-bgDeep rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-gold transition-all duration-500" id="prog-sup" style="width: 0%"></div>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -296,7 +314,15 @@
                 </div>
             </div>
         </section>
-
+        <!-- БЕЙДЖИ -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between px-2">
+                <h2 class="font-serif text-xl font-bold text-white">Достижения</h2>
+            </div>
+            <div class="glass-card p-5 rounded-3xl border border-white/10">
+                <div id="achievementsWidget"></div>
+            </div>
+        </section>
         <!-- 5. ИНСТРУМЕНТЫ (ДОБАВЛЕНО) -->
         <section class="space-y-3">
             <div class="flex items-center justify-between px-2">
@@ -674,6 +700,7 @@
     </script>
 
     <!-- НАШИ ГЛОБАЛЬНЫЕ СКРИПТЫ (Синхронизация и Меню) -->
+    <script src="achievements.js"></script>
     <script src="ui-upgrade.js"></script>
     <script src="bottom-menu.js"></script>
 </body>
