@@ -90,7 +90,7 @@
     <!-- НОВАЯ ШАПКА С ЛОГОТИПОМ -->
     <header class="max-w-3xl mx-auto mb-4">
         <div class="glass-card rounded-2xl px-4 py-3 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2.5 group">
+                       <a href="index.html" class="flex items-center gap-2.5 group">
                 <!-- Логотип-компас -->
                 <svg class="w-9 h-9 transition group-hover:rotate-45" style="color: #d4af37;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
@@ -100,7 +100,8 @@
                 <div>
                     <div class="font-serif font-bold text-lg text-white leading-tight flex items-center gap-1.5">
                         Точка опоры
-                        <button onclick="event.preventDefault(); event.stopPropagation(); openMissionModal()" class="text-gold hover:text-goldLight transition text-sm" title="О проекте">⭐</button>
+                        <!-- Заменили button на span и добавили return false -->
+                        <span onclick="event.preventDefault(); event.stopPropagation(); openMissionModal(); return false;" class="text-gold hover:text-goldLight transition text-sm cursor-pointer p-1" title="О проекте">⭐</span>
                     </div>
                     <div class="text-[10px] text-gray-400 leading-tight">Твой внутренний компас</div>
                 </div>
