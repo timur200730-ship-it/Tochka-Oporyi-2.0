@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tochka-opory-cache-v8';
+const CACHE_NAME = 'tochka-opory-cache-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ const ASSETS = [
 'icon-512.png',
 'icon-maskable-512.png',
 'apple-touch-icon.png',
-'emotion-magic.html',  
+'emotion-magic.html', 
+'inspiration.html', 
 'manifest.json',
 ];
 
