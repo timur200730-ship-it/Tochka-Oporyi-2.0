@@ -98,7 +98,10 @@
                     <circle cx="50" cy="50" r="8" fill="currentColor"/>
                 </svg>
                 <div>
-                    <div class="font-serif font-bold text-lg text-white leading-tight">Точка опоры</div>
+                    <div class="font-serif font-bold text-lg text-white leading-tight flex items-center gap-1.5">
+                        Точка опоры
+                        <button onclick="event.preventDefault(); event.stopPropagation(); openMissionModal()" class="text-gold hover:text-goldLight transition text-sm" title="О проекте">⭐</button>
+                    </div>
                     <div class="text-[10px] text-gray-400 leading-tight">Твой внутренний компас</div>
                 </div>
             </a>
@@ -281,7 +284,7 @@
         <!-- 2. МОДУЛИ -->
         <section id="modules" class="space-y-3">
             <div class="flex items-center justify-between px-2">
-                <h2 class="font-serif text-xl font-bold text-white">Три модуля</h2>
+                <h2 class="font-serif text-xl font-bold text-white">О чём бы ты хотел узнать?</h2>
                 <span class="text-xs text-gold">Полное погружение</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -368,7 +371,7 @@
             <div id="day-complete-banner" class="hidden mt-6 glass-card-gold rounded-2xl p-5 sm:p-6 text-center animate-fade-slide">
                 <div class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-2xl flex items-center justify-center mx-auto mb-3">✨</div>
                 <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Точка опоры дня собрана!</h3>
-                <p class="text-xs sm:text-sm text-gray-200 max-w-xl mx-auto mt-2 leading-relaxed"><strong>Елена и Тимур:</strong> «Гордимся тобой! Спокойного вечера 💛»</p>
+                <p class="text-xs sm:text-sm text-gray-200 max-w-xl mx-auto mt-2 leading-relaxed"><strong>Елена и Тимур:</strong> «Гордимся тобой! <span id="day-complete-time-phrase">Хорошего дня</span> 💛»</p>
             </div>
         </section>
 
@@ -398,7 +401,30 @@
                 <a href="habit-calculator.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">💸</span><span class="text-xs font-semibold text-gray-300">Привычки</span></a>
             </div>
         </section>
-
+        <!-- 7. ОТЗЫВЫ -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between px-2">
+                <h2 class="font-serif text-xl font-bold text-white">Голоса студентов</h2>
+            </div>
+            <div class="glass-card rounded-3xl p-5 sm:p-7">
+                <p class="text-xs sm:text-sm text-gray-400 mb-4">Что тебе помогает? Что было бы полезно? Поделись — это помогает нам делать приложение лучше.</p>
+                <div class="space-y-3">
+                    <input type="text" id="review-name" maxlength="20" placeholder="Имя (можно анонимно)" class="w-full bg-bgDeep/90 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold">
+                    <textarea id="review-text" rows="4" maxlength="500" placeholder="Твой отзыв или идея..." class="w-full bg-bgDeep/90 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold resize-none"></textarea>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <span class="text-[11px] text-gray-500"><span id="review-count">0</span>/500</span>
+                        <button onclick="submitReview()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">Отправить</button>
+                    </div>
+                </div>
+                <div id="review-thanks" class="hidden mt-4 rounded-xl bg-emeraldSoft/10 border border-emeraldSoft/30 px-4 py-3 text-xs text-emeraldSoft">
+                    Спасибо! Отзыв сохранён 💛 Если хочешь, чтобы мы его увидели — отправь кнопкой ниже.
+                </div>
+                <div id="review-actions" class="hidden mt-3 flex flex-wrap gap-2">
+                    <a id="review-mailto" href="#" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-200 hover:border-gold/40 transition">✉️ Отправить авторам</a>
+                    <button onclick="newReview()" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-200 hover:border-gold/40 transition">Ещё отзыв</button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- МОДАЛКИ (скопируй из прошлого кода) -->
@@ -436,13 +462,62 @@
             anxiety: { curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора', message: 'Когда мысли скачут, сначала успокой тело.', voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Почувствуй стопы на полу. Тебе ничего не угрожает».', actionText: '🌿 Дыхание', actionLink: 'breathing.html' },
             money: { curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность', message: 'Понимаю. Главное — без паники. Деньги любят спокойный счет.', voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Нехватка денег в студенчестве — это временно. Прикинем лимит».', actionText: '📊 Бюджет', actionLink: 'budget.html' }
         };
-
+        function openMissionModal() {
+            document.getElementById('mission-modal').classList.remove('hidden');
+        }
+        function closeMissionModal() {
+            document.getElementById('mission-modal').classList.add('hidden');
+        }
+        // клик по фону закрывает
+        document.addEventListener('click', (e) => {
+            const m = document.getElementById('mission-modal');
+            if (m && e.target === m) closeMissionModal();
+        });
         const DEFAULT_HABITS = [
             { id: 'fin', category: 'Финансы · Тимур', curatorInitials: 'ТХ', curatorName: 'Тимур', normalText: 'Записать траты за день', lowEnergyText: 'Не ругать себя за покупки', presets: ['Записать траты', 'Отложить 100 ₽', 'Проверить подписки'] },
             { id: 'psy', category: 'Психология · Елена', curatorInitials: 'ЕО', curatorName: 'Елена', normalText: 'Сделать 5-минутную паузу', lowEnergyText: 'Сделать 3 глубоких вдоха', presets: ['Пауза 5 минут', 'Назвать эмоцию', 'Дыхание'] },
             { id: 'res', category: 'Ресурс · Общее', curatorInitials: 'ЕО', curatorName: 'Елена и Тимур', normalText: 'Похвалить себя за 1 дело', lowEnergyText: 'Выпить воды и отдохнуть', presets: ['Похвалить себя', 'Лечь раньше', 'Прогулка'] }
         ];
+        // ===== ОТЗЫВЫ =====
+        const REVIEW_KEY = 'tochka_reviews_v1';
+        const REVIEW_EMAIL = 'hello@tochka-opory.ru'; // ← ЗАМЕНИ на реальный email авторов
 
+        function submitReview() {
+            const name = (document.getElementById('review-name').value || '').trim() || 'Аноним';
+            const text = (document.getElementById('review-text').value || '').trim();
+            if (text.length < 5) {
+                alert('Напиши чуть подробнее (минимум 5 символов)');
+                return;
+            }
+            const review = { date: Date.now(), name, text };
+            let arr = [];
+            try { arr = JSON.parse(localStorage.getItem(REVIEW_KEY) || '[]'); } catch(e) {}
+            arr.unshift(review);
+            arr = arr.slice(0, 50);
+            try { localStorage.setItem(REVIEW_KEY, JSON.stringify(arr)); } catch(e) {}
+
+            document.getElementById('review-thanks').classList.remove('hidden');
+            document.getElementById('review-actions').classList.remove('hidden');
+            const mailto = 'mailto:' + REVIEW_EMAIL +
+                '?subject=' + encodeURIComponent('Отзыв о «Точке опоры»') +
+                '&body=' + encodeURIComponent(name + '\n\n' + text);
+            document.getElementById('review-mailto').href = mailto;
+        }
+
+        function newReview() {
+            document.getElementById('review-name').value = '';
+            document.getElementById('review-text').value = '';
+            document.getElementById('review-count').textContent = '0';
+            document.getElementById('review-thanks').classList.add('hidden');
+            document.getElementById('review-actions').classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ta = document.getElementById('review-text');
+            if (ta) ta.addEventListener('input', () => {
+                document.getElementById('review-count').textContent = ta.value.length;
+            });
+        });
         const FEEDBACK_QUOTES = {
             fin: { normal: ['Красавчик! Главное, ты это видишь.', 'Отличный шаг!'], low: ['Правильно. В тяжелый день вина забирает силы.', 'Отложим расчеты на завтра.'] },
             psy: { normal: ['Твоя нервная система говорит спасибо 💛', 'Горжусь твоей бережностью.'], low: ['Вот так, мягко. Вдохи снижают кортизол.', 'Даже крошечное действие возвращает в тело.'] },
@@ -567,7 +642,12 @@
             document.getElementById('daily-progress-text').textContent = `${doneCount} из 3 опор`;
             document.getElementById('daily-progress-bar').style.width = `${Math.round((doneCount / 3) * 100)}%`;
             const beacon = document.getElementById('beacon-icon-wrap');
-            if (doneCount === 3) { beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))'; document.getElementById('day-complete-banner').classList.remove('hidden'); }
+                        if (doneCount === 3) {
+                beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))';
+                document.getElementById('day-complete-banner').classList.remove('hidden');
+                const phraseEl = document.getElementById('day-complete-time-phrase');
+                if (phraseEl) phraseEl.textContent = getTimeOfDayPhrase();
+            }
             else { beacon.style.filter = 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.35))'; document.getElementById('day-complete-banner').classList.add('hidden'); }
         }
 
@@ -706,6 +786,13 @@
             if (v) { state.customTexts[currentEditingHabitId] = v; state.lowEnergyMode = false; saveState(); renderLowEnergyToggle(); renderHabits(); }
             closeEditHabitModal();
         }
+            function getTimeOfDayPhrase() {
+            const h = new Date().getHours();
+            if (h >= 5 && h < 12)  return 'Доброе утро, начни день с заботы о себе';
+            if (h >= 12 && h < 18) return 'Хорошего дня, ты справляешься';
+            if (h >= 18 && h < 23) return 'Спокойного вечера, ты молодец';
+            return 'Доброй ночи, пора отдыхать';
+        }
         function resetSingleHabitToDefault() { if (!currentEditingHabitId) return; state.customTexts[currentEditingHabitId] = null; saveState(); renderHabits(); closeEditHabitModal(); }
 
         function openGroundingModal() { document.getElementById('grounding-modal').classList.remove('hidden'); }
@@ -714,6 +801,41 @@
 
         window.addEventListener('DOMContentLoaded', initAssistant);
     </script>
+        <!-- МОДАЛКА «О ПРОЕКТЕ» -->
+    <div id="mission-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card-gold rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-fade-slide relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-start justify-between gap-4 pb-4 border-b border-gold/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gold/20 border border-gold/40 text-gold text-lg flex items-center justify-center">🧭</div>
+                    <div>
+                        <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Зачем мы это сделали</h3>
+                        <p class="text-xs text-gray-400">О проекте «Точка опоры»</p>
+                    </div>
+                </div>
+                <button onclick="closeMissionModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
+            </div>
+            <div class="mt-4 space-y-3 text-xs sm:text-sm text-gray-200 leading-relaxed">
+                <p>Студенчество — это не только сессия и стипендия. Это тревога перед будущим, деньги «до конца недели», одиночество в толпе и поиск себя. «Точка опоры» родилась из желания быть рядом в этом моменте — без нотаций, оценок и «соберись».</p>
+                <p>Здесь можно ошибаться, брать паузу и идти в своём темпе. Без регистрации, без оплаты, без давления. Только практика, поддержка и маленькие шаги.</p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-gold/20 flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ЕО</div>
+                    <div>
+                        <div class="text-xs font-semibold text-white">Елена Осинцева</div>
+                        <div class="text-[10px] text-gray-400">Преподаватель, психолог</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ТХ</div>
+                    <div>
+                        <div class="text-xs font-semibold text-white">Тимур Хайретдинов</div>
+                        <div class="text-[10px] text-gray-400">Преподаватель, коуч, экономист</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="ui-upgrade.js"></script>
     <script src="bottom-menu.js"></script>
     <script src="achievements.js"></script>
