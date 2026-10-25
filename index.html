@@ -9,11 +9,7 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Точка опоры" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Точка опоры" />
@@ -45,54 +41,119 @@
         }
     </script>
     <style>
+        /* Переменные для тем */
+        :root, [data-theme="dark-gold"] {
+            --bg: #0f1115;
+            --bg-2: #161920;
+            --card: rgba(22, 25, 32, 0.82);
+            --card-gold: linear-gradient(145deg, rgba(28, 32, 42, 0.9), rgba(22, 25, 32, 0.95));
+            --text: #f3f4f6;
+            --muted: #a1a1b5;
+            --stroke: rgba(255, 255, 255, 0.08);
+            --accent: #d4af37;
+        }
+
+        [data-theme="light"] {
+            --bg: #F6F4FB;
+            --bg-2: #ffffff;
+            --card: #ffffff;
+            --card-gold: #ffffff;
+            --text: #171233;
+            --muted: #4A4266;
+            --stroke: rgba(20, 10, 50, 0.12);
+            --accent: #8B7CF6;
+        }
+
+        [data-theme="emerald"] {
+            --bg: #06100e;
+            --bg-2: #0b1a16;
+            --card: rgba(11, 26, 22, 0.82);
+            --card-gold: linear-gradient(145deg, rgba(11, 26, 22, 0.9), rgba(11, 26, 22, 0.95));
+            --text: #e2f1ec;
+            --muted: #7a9c91;
+            --stroke: rgba(52, 211, 153, 0.15);
+            --accent: #34d399;
+        }
+
+        [data-theme="amber"] {
+            --bg: #120c06;
+            --bg-2: #1c130a;
+            --card: rgba(28, 19, 10, 0.82);
+            --card-gold: linear-gradient(145deg, rgba(28, 19, 10, 0.9), rgba(28, 19, 10, 0.95));
+            --text: #fcebd6;
+            --muted: #a68862;
+            --stroke: rgba(245, 158, 11, 0.15);
+            --accent: #f59e0b;
+        }
+
         body {
-            background-color: #0f1115;
-            color: #f3f4f6;
+            background-color: var(--bg);
+            color: var(--text);
             font-family: 'Montserrat', sans-serif;
-            background-image: 
-                radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(52, 211, 153, 0.05) 0%, transparent 45%);
+            background-image: radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 45%);
             min-height: 100vh;
             overflow-x: hidden;
             padding-bottom: 100px;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        /* Жёсткий фикс для светлой темы, чтобы перебить Tailwind-классы */
+        html[data-theme="light"] .text-white,
+        html[data-theme="light"] .text-gray-100,
+        html[data-theme="light"] .text-gray-200,
+        html[data-theme="light"] .text-gray-300 { color: var(--text) !important; }
+        
+        html[data-theme="light"] .text-gray-400,
+        html[data-theme="light"] .text-gray-500 { color: var(--muted) !important; }
+        
+        html[data-theme="light"] .text-gold { color: var(--accent) !important; }
+
+        html[data-theme="light"] [class*="bg-bgDeep"],
+        html[data-theme="light"] [class*="bg-bgCard"] { 
+            background-color: var(--bg-2) !important; 
+            border-color: var(--stroke) !important;
+        }
+
         .glass-card {
-            background: rgba(22, 25, 32, 0.82);
+            background: var(--card) !important;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--stroke) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         }
+
         .glass-card-gold {
-            background: linear-gradient(145deg, rgba(28, 32, 42, 0.9), rgba(22, 25, 32, 0.95));
-            border: 1px solid rgba(212, 175, 55, 0.28);
-            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.08);
+            background: var(--card-gold) !important;
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent) !important;
+            box-shadow: 0 12px 35px color-mix(in srgb, var(--accent) 10%, transparent);
         }
+
         @keyframes fadeInSlide {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-slide { animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .wave-bar { width: 3px; background-color: #d4af37; border-radius: 999px; transition: height 0.2s ease; }
+        .wave-bar { width: 3px; background-color: var(--accent); border-radius: 999px; transition: height 0.2s ease; }
         .playing .wave-bar { animation: soundWave 0.9s infinite ease-in-out alternate; }
         .playing .wave-bar:nth-child(2n) { animation-duration: 0.65s; }
         .playing .wave-bar:nth-child(3n) { animation-duration: 1.1s; }
         @keyframes soundWave { 0% { height: 5px; opacity: 0.4; } 100% { height: 22px; opacity: 1; } }
-        .beacon-glow { filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.6)); transition: all 0.5s ease; }
+        .beacon-glow { filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 60%, transparent)); transition: all 0.5s ease; }
+        
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f1115; }
-        ::-webkit-scrollbar-thumb { background: #262b36; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
     </style>
 </head>
 <body class="py-6 px-4 sm:px-6 lg:px-8 antialiased selection:bg-gold selection:text-bgDeep">
 
-    <!-- НОВАЯ ШАПКА С ЛОГОТИПОМ -->
+    <!-- ШАПКА -->
     <header class="max-w-3xl mx-auto mb-4">
         <div class="glass-card rounded-2xl px-4 py-3 flex items-center justify-between">
-                                   <a href="index.html" onclick="if(window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) { event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }" class="flex items-center gap-2.5 group">
+            <a href="index.html" onclick="if(window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) { event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }" class="flex items-center gap-2.5 group">
                 <!-- Логотип-компас -->
-                <svg class="w-9 h-9 transition group-hover:rotate-45" style="color: #d4af37;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-9 h-9 transition group-hover:rotate-45" style="color: var(--accent);" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
                     <path d="M50 15 L60 40 L85 50 L60 60 L50 85 L40 60 L15 50 L40 40 Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
                     <circle cx="50" cy="50" r="8" fill="currentColor"/>
@@ -100,8 +161,7 @@
                 <div>
                     <div class="font-serif font-bold text-lg text-white leading-tight flex items-center gap-1.5">
                         Точка опоры
-                        <!-- Заменили button на span и добавили return false -->
-                        <span onclick="event.preventDefault(); event.stopPropagation(); openMissionModal(); return false;" class="text-gold hover:text-goldLight transition text-sm cursor-pointer p-1" title="О проекте">⭐</span>
+                        <span onclick="event.preventDefault(); event.stopPropagation(); openMissionModal(); return false;" class="text-gold hover:opacity-80 transition text-sm cursor-pointer p-1" title="О проекте">⭐</span>
                     </div>
                     <div class="text-[10px] text-gray-400 leading-tight">Твой внутренний компас</div>
                 </div>
@@ -164,220 +224,8 @@
                 </button>
             </div>
         </section>
-<!-- 3. ЧЕК-ИН -->
-        <section class="glass-card rounded-3xl p-5 sm:p-7">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                <div>
-                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Как ты?</h2>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Как прошёл твой день? Елена или Тимур подскажут, на что опереться.</p>
-                </div>
-                <span id="checkin-status-badge" class="text-[11px] text-gray-400 bg-white/5 px-3 py-1 rounded-full self-start sm:self-center">Выбери состояние</span>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="selectMood('energy')" id="mood-btn-energy" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🔋</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Есть силы</div><div class="text-[11px] text-gray-400">Готов действовать</div></div>
-                </button>
-                <button onclick="selectMood('autopilot')" id="mood-btn-autopilot" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">😶</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div><div class="text-[11px] text-gray-400">Нет ресурса</div></div>
-                </button>
-                <button onclick="selectMood('anxiety')" id="mood-btn-anxiety" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🌪</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Тревожно</div><div class="text-[11px] text-gray-400">Мысли скачут</div></div>
-                </button>
-                <button onclick="selectMood('money')" id="mood-btn-money" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
-                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">💸</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div><div class="text-[11px] text-gray-400">До стипендии</div></div>
-                </button>
-            </div>
-            <div id="curator-checkin-response" class="hidden mt-5 pt-5 border-t border-white/10 animate-fade-slide">
-                <div class="glass-card-gold rounded-2xl p-4 sm:p-5">
-                    <div class="flex items-start gap-3.5">
-                        <div id="curator-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex flex-wrap items-center justify-between gap-2">
-                                <div>
-                                    <h3 id="curator-name" class="text-sm font-bold text-white">Елена Осинцева</h3>
-                                    <p id="curator-role" class="text-[11px] text-gold">Психологическая опора</p>
-                                </div>
-                            </div>
-                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">Слышу тебя.</p>
-                            <div class="mt-4 bg-bgDeep/90 border border-white/10 rounded-xl p-3">
-                                <div class="flex items-center justify-between gap-3">
-                                    <button onclick="toggleVoicePill()" id="voice-play-btn" class="w-9 h-9 rounded-xl bg-gold text-bgDeep flex items-center justify-center shrink-0 hover:bg-goldLight transition active:scale-95">
-                                        <svg id="voice-icon-play" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13l11-6.5-11-6.5z"/></svg>
-                                        <svg id="voice-icon-pause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" clip-rule="evenodd"/></svg>
-                                    </button>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between text-[11px] mb-1">
-                                            <span id="voice-pill-title" class="font-semibold text-gold truncate">🎧 Голосовая заметка</span>
-                                            <span id="voice-timer" class="text-gray-400 font-mono">0:45</span>
-                                        </div>
-                                        <div id="voice-waveform" class="flex items-center gap-1 h-6 overflow-hidden">
-                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
-                                    <span id="voice-transcript-text">«Положи стопы на пол...»</span>
-                                </div>
-                            </div>
-                            <div class="mt-4 flex flex-wrap items-center gap-2.5">
-                                <a id="curator-action-link" href="breathing.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
-                                    <span id="curator-action-text">🌿 Включить дыхание</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                <!-- 1.5. МИССИЯ + ГОЛОС ДНЯ -->
-        <section class="space-y-3">
 
-            <!-- Миссия -->
-            <div class="glass-card-gold rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-                <div class="absolute -bottom-24 -left-24 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="flex items-center gap-2.5 mb-3 relative">
-                    <span class="text-xl">🧭</span>
-                    <h2 class="font-serif text-lg sm:text-xl font-bold text-white">Зачем мы это сделали</h2>
-                </div>
-                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed relative">
-                    Студенчество — это не только сессия и стипендия. Это тревога перед будущим, деньги «до конца недели», одиночество в толпе и поиск себя. «Точка опоры» родилась из желания быть рядом в этом моменте — без нотаций, оценок и «соберись».
-                </p>
-                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mt-3 relative">
-                    Здесь можно ошибаться, брать паузу и идти в своём темпе. Без регистрации, без оплаты, без давления. Только практика, поддержка и маленькие шаги.
-                </p>
-                <div class="mt-5 pt-4 border-t border-gold/20 flex flex-wrap items-center gap-x-5 gap-y-3 relative">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ЕО</div>
-                        <div>
-                            <div class="text-xs font-semibold text-white">Елена Осинцева</div>
-                            <div class="text-[10px] text-gray-400">Психология · Поддержка</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ТХ</div>
-                        <div>
-                            <div class="text-xs font-semibold text-white">Тимур Хайретдинов</div>
-                            <div class="text-[10px] text-gray-400">Финансы</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Голос дня -->
-            <div class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-                <div class="flex items-start gap-3.5">
-                    <div id="voice-day-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="text-[10px] uppercase tracking-wider text-gold font-semibold">Голос дня</span>
-                            <span class="text-gray-500">·</span>
-                            <span id="voice-day-name" class="text-sm font-bold text-white">Елена Осинцева</span>
-                        </div>
-                        <p id="voice-day-text" class="text-xs sm:text-sm text-gray-200 mt-2 leading-relaxed italic">«…»</p>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-        <!-- 2. МОДУЛИ --> <main id="tochka-opory-assistant" class="max-w-3xl mx-auto space-y-6">
-
-        <!-- 1. КАРТОЧКА-ПРИВЕТСТВИЕ -->
-        <section class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
-                <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/25 text-gold text-xs font-medium mb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-                        <span>Карманный помощник · Мы рядом 💛</span>
-                    </div>
-                    <h1 class="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight flex flex-wrap items-baseline gap-x-2">
-                        <span id="greeting-time">Добрый день</span>,
-                        <button id="user-name-btn" onclick="openNameEdit()" class="text-gold hover:text-goldLight underline decoration-gold/40 decoration-dashed underline-offset-4 transition group inline-flex items-center gap-1.5" title="Нажми, чтобы изменить имя">
-                            <span id="user-name-display">Друг</span>
-                            <svg class="w-4 h-4 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                        </button>
-                    </h1>
-                    <div id="name-input-container" class="hidden mt-2 flex items-center gap-2">
-                        <input type="text" id="name-input-field" maxlength="20" placeholder="Как к тебе обращаться?" class="bg-bgDeep/90 border border-gold/40 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none focus:border-gold w-48">
-                        <button onclick="saveUserName()" class="bg-gold text-bgDeep font-semibold text-xs px-3 py-2 rounded-xl hover:bg-goldLight transition">Сохранить</button>
-                    </div>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-1">Здесь можно ошибаться, брать паузу и идти в своем темпе.</p>
-                </div>
-            </div>
-            <div class="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-center gap-3 flex-1">
-                    <div id="beacon-icon-wrap" class="w-10 h-10 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0 beacon-glow">
-                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0l-1.414-1.414M7.05 7.05L5.636 5.636M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-gray-300 font-medium">Маяк устойчивости на сегодня</span>
-                            <span id="daily-progress-text" class="text-gold font-semibold">0 из 3 опор</span>
-                        </div>
-                        <div class="w-full h-2 bg-bgDeep rounded-full overflow-hidden border border-white/5">
-                            <div id="daily-progress-bar" class="h-full bg-gradient-to-r from-gold/80 to-goldLight transition-all duration-500 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="openGroundingModal()" class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-roseSoft/15 hover:bg-roseSoft/25 border border-roseSoft/30 text-roseSoft text-xs font-semibold transition active:scale-95">
-                    <span>🛟</span><span>Накрывает? Заземление</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- 1.5. МИССИЯ + ГОЛОС ДНЯ -->
-        <section class="space-y-3">
-            <!-- Миссия -->
-            <div class="glass-card-gold rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-                <div class="absolute -bottom-24 -left-24 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="flex items-center gap-2.5 mb-3 relative">
-                    <span class="text-xl">🧭</span>
-                    <h2 class="font-serif text-lg sm:text-xl font-bold text-white">Зачем мы это сделали</h2>
-                </div>
-                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed relative">
-                    Студенчество — это не только сессия и стипендия. Это тревога перед будущим, деньги «до конца недели», одиночество в толпе и поиск себя. «Точка опоры» родилась из желания быть рядом в этом моменте — без нотаций, оценок и «соберись».
-                </p>
-                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mt-3 relative">
-                    Здесь можно ошибаться, брать паузу и идти в своём темпе. Без регистрации, без оплаты, без давления. Только практика, поддержка и маленькие шаги.
-                </p>
-                <div class="mt-5 pt-4 border-t border-gold/20 flex flex-wrap items-center gap-x-5 gap-y-3 relative">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ЕО</div>
-                        <div>
-                            <div class="text-xs font-semibold text-white">Елена Осинцева</div>
-                            <div class="text-[10px] text-gray-400">Психология · Поддержка</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ТХ</div>
-                        <div>
-                            <div class="text-xs font-semibold text-white">Тимур Хайретдинов</div>
-                            <div class="text-[10px] text-gray-400">Финансы</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Голос дня -->
-            <div class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-                <div class="flex items-start gap-3.5">
-                    <div id="voice-day-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="text-[10px] uppercase tracking-wider text-gold font-semibold">Голос дня</span>
-                            <span class="text-gray-500">·</span>
-                            <span id="voice-day-name" class="text-sm font-bold text-white">Елена Осинцева</span>
-                        </div>
-                        <p id="voice-day-text" class="text-xs sm:text-sm text-gray-200 mt-2 leading-relaxed italic">«…»</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. ЧЕК-ИН -->
+        <!-- 2. ЧЕК-ИН (Как ты?) -->
         <section class="glass-card rounded-3xl p-5 sm:p-7">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
@@ -447,7 +295,24 @@
             </div>
         </section>
 
-        <!-- 3. МОДУЛИ -->
+        <!-- 1.5. ГОЛОС ДНЯ -->
+        <section class="space-y-3">
+            <div class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
+                <div class="flex items-start gap-3.5">
+                    <div id="voice-day-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">ЕО</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-[10px] uppercase tracking-wider text-gold font-semibold">Голос дня</span>
+                            <span class="text-gray-500">·</span>
+                            <span id="voice-day-name" class="text-sm font-bold text-white">Елена Осинцева</span>
+                        </div>
+                        <p id="voice-day-text" class="text-xs sm:text-sm text-gray-200 mt-2 leading-relaxed italic">«…»</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. МОДУЛИ (О чём бы ты хотел узнать?) -->
         <section id="modules" class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">О чём бы ты хотел узнать?</h2>
@@ -562,10 +427,11 @@
                 <a href="scam-game.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🕵️</span><span class="text-xs font-semibold text-gray-300">Мошенник</span></a>
                 <a href="survive-test.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🌧</span><span class="text-xs font-semibold text-gray-300">Пережить</span></a>
                 <a href="habit-calculator.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">💸</span><span class="text-xs font-semibold text-gray-300">Привычки</span></a>
-                            <a href="inspiration.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🎬</span><span class="text-xs font-semibold text-gray-300">Вдохновение</span></a>
+                <a href="inspiration.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🎬</span><span class="text-xs font-semibold text-gray-300">Вдохновение</span></a>
             </div>
         </section>
-               <!-- 7. ОТЗЫВЫ -->
+
+        <!-- 7. ОТЗЫВЫ -->
         <section class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">Голоса студентов</h2>
@@ -592,7 +458,7 @@
         </section>
     </main>
 
-    <!-- МОДАЛКИ (скопируй из прошлого кода) -->
+    <!-- МОДАЛКИ -->
     <div id="edit-habit-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card rounded-3xl max-w-md w-full p-6 border border-gold/30 animate-fade-slide">
             <div class="flex items-center justify-between pb-3 border-b border-white/10"><h3 class="font-serif text-lg font-bold text-white">Настроить опору</h3><button onclick="closeEditHabitModal()" class="text-gray-400 hover:text-white p-1">✕</button></div>
@@ -616,10 +482,47 @@
         </div>
     </div>
 
+    <!-- МОДАЛКА «О ПРОЕКТЕ» -->
+    <div id="mission-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card-gold rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-fade-slide relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-start justify-between gap-4 pb-4 border-b border-gold/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gold/20 border border-gold/40 text-gold text-lg flex items-center justify-center">🧭</div>
+                    <div>
+                        <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Зачем мы это сделали</h3>
+                        <p class="text-xs text-gray-400">О проекте «Точка опоры»</p>
+                    </div>
+                </div>
+                <button onclick="closeMissionModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
+            </div>
+            <div class="mt-4 space-y-3 text-xs sm:text-sm text-gray-200 leading-relaxed">
+                <p>Студенчество — это не только сессия и стипендия. Это тревога перед будущим, деньги «до конца недели», одиночество в толпе и поиск себя. «Точка опоры» родилась из желания быть рядом в этом моменте — без нотаций, оценок и «соберись».</p>
+                <p>Здесь можно ошибаться, брать паузу и идти в своём темпе. Без регистрации, без оплаты, без давления. Только практика, поддержка и маленькие шаги.</p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-gold/20 flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ЕО</div>
+                    <div>
+                        <div class="text-xs font-semibold text-white">Елена Осинцева</div>
+                        <div class="text-[10px] text-gray-400">Преподаватель, психолог</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ТХ</div>
+                    <div>
+                        <div class="text-xs font-semibold text-white">Тимур Хайретдинов</div>
+                        <div class="text-[10px] text-gray-400">Преподаватель, коуч, экономист</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- СКРИПТЫ -->
     <script>
         const GLOBAL_KEY = 'tochka_opory_v1';
         const ASSISTANT_KEY = 'tochka_opory_assistant_v1';
+        const REVIEW_KEY = 'tochka_reviews_v1';
 
         const MOOD_DATA = {
             energy: { curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность', message: 'Отличный настрой! Выбери главное дело и загляни в бюджет.', voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Привет! Сделай три шага и оставь силы на отдых».', actionText: '📊 Бюджет', actionLink: 'budget.html' },
@@ -627,55 +530,13 @@
             anxiety: { curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора', message: 'Когда мысли скачут, сначала успокой тело.', voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Почувствуй стопы на полу. Тебе ничего не угрожает».', actionText: '🌿 Дыхание', actionLink: 'breathing.html' },
             money: { curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность', message: 'Понимаю. Главное — без паники. Деньги любят спокойный счет.', voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Нехватка денег в студенчестве — это временно. Прикинем лимит».', actionText: '📊 Бюджет', actionLink: 'budget.html' }
         };
-        function openMissionModal() {
-            document.getElementById('mission-modal').classList.remove('hidden');
-        }
-        function closeMissionModal() {
-            document.getElementById('mission-modal').classList.add('hidden');
-        }
-        // клик по фону закрывает
-        document.addEventListener('click', (e) => {
-            const m = document.getElementById('mission-modal');
-            if (m && e.target === m) closeMissionModal();
-        });
+
         const DEFAULT_HABITS = [
             { id: 'fin', category: 'Финансы · Тимур', curatorInitials: 'ТХ', curatorName: 'Тимур', normalText: 'Записать траты за день', lowEnergyText: 'Не ругать себя за покупки', presets: ['Записать траты', 'Отложить 100 ₽', 'Проверить подписки'] },
             { id: 'psy', category: 'Психология · Елена', curatorInitials: 'ЕО', curatorName: 'Елена', normalText: 'Сделать 5-минутную паузу', lowEnergyText: 'Сделать 3 глубоких вдоха', presets: ['Пауза 5 минут', 'Назвать эмоцию', 'Дыхание'] },
             { id: 'res', category: 'Ресурс · Общее', curatorInitials: 'ЕО', curatorName: 'Елена и Тимур', normalText: 'Похвалить себя за 1 дело', lowEnergyText: 'Выпить воды и отдохнуть', presets: ['Похвалить себя', 'Лечь раньше', 'Прогулка'] }
         ];
-                // ===== ОТЗЫВЫ =====
-        const REVIEW_KEY = 'tochka_reviews_v1';
 
-        function submitReview() {
-            const text = (document.getElementById('review-text').value || '').trim();
-            if (text.length < 5) {
-                alert('Напиши чуть подробнее (минимум 5 символов)');
-                return;
-            }
-            const review = { date: Date.now(), text };
-            let arr = [];
-            try { arr = JSON.parse(localStorage.getItem(REVIEW_KEY) || '[]'); } catch(e) {}
-            arr.unshift(review);
-            arr = arr.slice(0, 50);
-            try { localStorage.setItem(REVIEW_KEY, JSON.stringify(arr)); } catch(e) {}
-
-            document.getElementById('review-thanks').classList.remove('hidden');
-            document.getElementById('review-actions').classList.remove('hidden');
-        }
-
-        function newReview() {
-            document.getElementById('review-text').value = '';
-            document.getElementById('review-count').textContent = '0';
-            document.getElementById('review-thanks').classList.add('hidden');
-            document.getElementById('review-actions').classList.add('hidden');
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const ta = document.getElementById('review-text');
-            if (ta) ta.addEventListener('input', () => {
-                document.getElementById('review-count').textContent = ta.value.length;
-            });
-        });
         const FEEDBACK_QUOTES = {
             fin: { normal: ['Красавчик! Главное, ты это видишь.', 'Отличный шаг!'], low: ['Правильно. В тяжелый день вина забирает силы.', 'Отложим расчеты на завтра.'] },
             psy: { normal: ['Твоя нервная система говорит спасибо 💛', 'Горжусь твоей бережностью.'], low: ['Вот так, мягко. Вдохи снижают кортизол.', 'Даже крошечное действие возвращает в тело.'] },
@@ -686,49 +547,22 @@
         let currentEditingHabitId = null; let voiceInterval = null; let voiceSecondsLeft = 45; let isVoicePlaying = false;
 
         function initAssistant() {
-    loadState(); updateTimeGreeting(); renderHeaderStats(); renderLowEnergyToggle(); renderHabits(); renderModulesProgress();
-    if (state.selectedMood && MOOD_DATA[state.selectedMood]) selectMood(state.selectedMood, true);
-    initVoiceOfDay();
-}
-        // ===== ГОЛОС КУРАТОРА ДНЯ =====
+            loadState(); updateTimeGreeting(); renderHeaderStats(); renderLowEnergyToggle(); renderHabits(); renderModulesProgress();
+            if (state.selectedMood && MOOD_DATA[state.selectedMood]) selectMood(state.selectedMood, true);
+            initVoiceOfDay();
+        }
+
         function initVoiceOfDay() {
             const VOICES = {
-                elena: {
-                    name: 'Елена Осинцева',
-                    initials: 'ЕО',
-                    phrases: [
-                        'Если сегодня ты просто открыл приложение — ты уже сделал шаг. Не обесценивай это.',
-                        'Ты не обязан быть продуктивным, чтобы быть ценным. Правда.',
-                        'Тревога кричит, что нужно решить всё сейчас. Но у тебя есть право не решать сегодня.',
-                        'Один вдох и один выдох — это уже забота о себе. Начни с малого.',
-                        'Ты справлялся с трудным раньше. Этот день — тоже по силам.',
-                        'Если накрывает — не оставайся один. Напиши кому-то. Даже «привет» считается.',
-                        'Твой темп — правильный. Не сравнивай его с чужим.'
-                    ]
-                },
-                timur: {
-                    name: 'Тимур Хайретдинов',
-                    initials: 'ТХ',
-                    phrases: [
-                        'Деньги — это инструмент, а не мера твоей ценности. Начнём с малого.',
-                        'Записал трату — уже управляешь. Не записал — она управляет тобой.',
-                        'Нехватка денег в студенчестве — это временно. Это не приговор.',
-                        'Бюджет — это не запрет, а ясность. Когда видишь цифры, тревога уменьшается.',
-                        'Отложить 100 рублей сегодня — это уже шаг к финансовой опоре.',
-                        'Не ругай себя за покупку. Лучше посмотри, что она тебе дала.',
-                        'Финансовая устойчивость — это не про большие суммы. Это про привычку.'
-                    ]
-                }
+                elena: { name: 'Елена Осинцева', initials: 'ЕО', phrases: ['Если сегодня ты просто открыл приложение — ты уже сделал шаг. Не обесценивай это.', 'Ты не обязан быть продуктивным, чтобы быть ценным. Правда.', 'Тревога кричит, что нужно решить всё сейчас. Но у тебя есть право не решать сегодня.', 'Один вдох и один выдох — это уже забота о себе. Начни с малого.', 'Ты справлялся с трудным раньше. Этот день — тоже по силам.', 'Если накрывает — не оставайся один. Напиши кому-то. Даже «привет» считается.', 'Твой темп — правильный. Не сравнивай его с чужим.'] },
+                timur: { name: 'Тимур Хайретдинов', initials: 'ТХ', phrases: ['Деньги — это инструмент, а не мера твоей ценности. Начнём с малого.', 'Записал трату — уже управляешь. Не записал — она управляет тобой.', 'Нехватка денег в студенчестве — это временно. Это не приговор.', 'Бюджет — это не запрет, а ясность. Когда видишь цифры, тревога уменьшается.', 'Отложить 100 рублей сегодня — это уже шаг к финансовой опоре.', 'Не ругай себя за покупку. Лучше посмотри, что она тебе дала.', 'Финансовая устойчивость — это не про большие суммы. Это про привычку.'] }
             };
-
             const now = new Date();
             const startOfYear = new Date(now.getFullYear(), 0, 0);
             const dayOfYear = Math.floor((now - startOfYear) / 86400000);
-
             const isElena = dayOfYear % 2 === 0;
             const voice = isElena ? VOICES.elena : VOICES.timur;
             const phrase = voice.phrases[dayOfYear % voice.phrases.length];
-
             const av = document.getElementById('voice-day-avatar');
             const nm = document.getElementById('voice-day-name');
             const tx = document.getElementById('voice-day-text');
@@ -736,6 +570,7 @@
             if (nm) nm.textContent = voice.name;
             if (tx) tx.textContent = '«' + phrase + '»';
         }
+
         function renderModulesProgress() {
             try {
                 const globalStore = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
@@ -743,7 +578,6 @@
                 const finDone = (ld.fin || []).length;
                 const psyDone = (ld.psy || []).length;
                 const supDone = (ld.sup || []).length;
-                
                 const set = (id, done, total) => {
                     const fill = document.getElementById('prog-' + id);
                     const text = document.getElementById('progText-' + id);
@@ -800,7 +634,7 @@
             document.getElementById('daily-progress-text').textContent = `${doneCount} из 3 опор`;
             document.getElementById('daily-progress-bar').style.width = `${Math.round((doneCount / 3) * 100)}%`;
             const beacon = document.getElementById('beacon-icon-wrap');
-                        if (doneCount === 3) {
+            if (doneCount === 3) {
                 beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))';
                 document.getElementById('day-complete-banner').classList.remove('hidden');
                 const phraseEl = document.getElementById('day-complete-time-phrase');
@@ -849,35 +683,34 @@
         }
 
         function renderLowEnergyToggle() {
-    const cb = document.getElementById('low-energy-toggle');
-    const t  = document.getElementById('toggle-track');
-    const d  = document.getElementById('toggle-dot');
-    const b  = document.getElementById('low-energy-banner');
-
-
-    if (cb) cb.checked = state.lowEnergyMode;
-    if (t && d && b) {
-        if (state.lowEnergyMode) {
-            t.classList.replace('bg-gray-700', 'bg-emeraldSoft');
-            d.style.transform = 'translateX(20px)';
-            b.classList.remove('hidden');
-        } else {
-            t.classList.replace('bg-emeraldSoft', 'bg-gray-700');
-            d.style.transform = 'translateX(0px)';
-            b.classList.add('hidden');
+            const cb = document.getElementById('low-energy-toggle');
+            const t  = document.getElementById('toggle-track');
+            const d  = document.getElementById('toggle-dot');
+            const b  = document.getElementById('low-energy-banner');
+            if (cb) cb.checked = state.lowEnergyMode;
+            if (t && d && b) {
+                if (state.lowEnergyMode) {
+                    t.classList.replace('bg-gray-700', 'bg-emeraldSoft');
+                    d.style.transform = 'translateX(20px)';
+                    b.classList.remove('hidden');
+                } else {
+                    t.classList.replace('bg-emeraldSoft', 'bg-gray-700');
+                    d.style.transform = 'translateX(0px)';
+                    b.classList.add('hidden');
+                }
+            }
         }
-    }
-}
+
         window.toggleLowEnergyMode = function(e) {
-    try {
-        state.lowEnergyMode = e;
-        saveState();
-        renderLowEnergyToggle();
-        renderHabits();
-    } catch(err) {
-        console.error('[LowEnergy] ERROR:', err);
-    }
-};
+            try {
+                state.lowEnergyMode = e;
+                saveState();
+                renderLowEnergyToggle();
+                renderHabits();
+            } catch(err) {
+                console.error('[LowEnergy] ERROR:', err);
+            }
+        };
 
         function renderHabits() {
             const c = document.getElementById('habits-list'); c.innerHTML = '';
@@ -941,7 +774,7 @@
             if (v) { state.customTexts[currentEditingHabitId] = v; state.lowEnergyMode = false; saveState(); renderLowEnergyToggle(); renderHabits(); }
             closeEditHabitModal();
         }
-            function getTimeOfDayPhrase() {
+        function getTimeOfDayPhrase() {
             const h = new Date().getHours();
             if (h >= 5 && h < 12)  return 'Доброе утро, начни день с заботы о себе';
             if (h >= 12 && h < 18) return 'Хорошего дня, ты справляешься';
@@ -953,84 +786,38 @@
         function openGroundingModal() { document.getElementById('grounding-modal').classList.remove('hidden'); }
         function closeGroundingModal() { document.getElementById('grounding-modal').classList.add('hidden'); }
         function toggleGroundingStep(b) { const c = b.querySelector('.step-check'); c.classList.toggle('hidden'); b.classList.toggle('border-emeraldSoft/50'); b.classList.toggle('bg-emeraldSoft/10'); }
+        
+        function openMissionModal() { document.getElementById('mission-modal').classList.remove('hidden'); }
+        function closeMissionModal() { document.getElementById('mission-modal').classList.add('hidden'); }
+        document.addEventListener('click', (e) => { const m = document.getElementById('mission-modal'); if (m && e.target === m) closeMissionModal(); });
 
-        window.addEventListener('DOMContentLoaded', initAssistant);
+        function submitReview() {
+            const text = (document.getElementById('review-text').value || '').trim();
+            if (text.length < 5) { alert('Напиши чуть подробнее (минимум 5 символов)'); return; }
+            const review = { date: Date.now(), text };
+            let arr = [];
+            try { arr = JSON.parse(localStorage.getItem(REVIEW_KEY) || '[]'); } catch(e) {}
+            arr.unshift(review); arr = arr.slice(0, 50);
+            try { localStorage.setItem(REVIEW_KEY, JSON.stringify(arr)); } catch(e) {}
+            document.getElementById('review-thanks').classList.remove('hidden');
+            document.getElementById('review-actions').classList.remove('hidden');
+        }
+
+        function newReview() {
+            document.getElementById('review-text').value = '';
+            document.getElementById('review-count').textContent = '0';
+            document.getElementById('review-thanks').classList.add('hidden');
+            document.getElementById('review-actions').classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ta = document.getElementById('review-text');
+            if (ta) ta.addEventListener('input', () => { document.getElementById('review-count').textContent = ta.value.length; });
+            window.addEventListener('DOMContentLoaded', initAssistant);
+        });
     </script>
-        <!-- МОДАЛКА «О ПРОЕКТЕ» -->
-    <div id="mission-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-card-gold rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-fade-slide relative max-h-[90vh] overflow-y-auto">
-            <div class="flex items-start justify-between gap-4 pb-4 border-b border-gold/20">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-gold/20 border border-gold/40 text-gold text-lg flex items-center justify-center">🧭</div>
-                    <div>
-                        <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Зачем мы это сделали</h3>
-                        <p class="text-xs text-gray-400">О проекте «Точка опоры»</p>
-                    </div>
-                </div>
-                <button onclick="closeMissionModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
-            </div>
-            <div class="mt-4 space-y-3 text-xs sm:text-sm text-gray-200 leading-relaxed">
-                <p>Студенчество — это не только сессия и стипендия. Это тревога перед будущим, деньги «до конца недели», одиночество в толпе и поиск себя. «Точка опоры» родилась из желания быть рядом в этом моменте — без нотаций, оценок и «соберись».</p>
-                <p>Здесь можно ошибаться, брать паузу и идти в своём темпе. Без регистрации, без оплаты, без давления. Только практика, поддержка и маленькие шаги.</p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-gold/20 flex flex-wrap items-center gap-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ЕО</div>
-                    <div>
-                        <div class="text-xs font-semibold text-white">Елена Осинцева</div>
-                        <div class="text-[10px] text-gray-400">Преподаватель, психолог</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 text-gold font-serif font-bold text-xs flex items-center justify-center">ТХ</div>
-                    <div>
-                        <div class="text-xs font-semibold text-white">Тимур Хайретдинов</div>
-                        <div class="text-[10px] text-gray-400">Преподаватель, коуч, экономист</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="ui-upgrade.js"></script>
     <script src="bottom-menu.js"></script>
     <script src="achievements.js"></script>
-            <style>
-  /* ВРЕМЕННЫЙ ЖЁСТКИЙ ФИКС СВЕТЛОЙ ТЕМЫ ДЛЯ ГЛАВНОЙ */
-  html[data-theme="light"] body {
-    background-color: #F6F4FB !important;
-    color: #171233 !important;
-    background-image: none !important;
-  }
-  html[data-theme="light"] .glass-card,
-  html[data-theme="light"] .glass-card-gold,
-  html[data-theme="light"] .mood-btn,
-  html[data-theme="light"] [class*="bg-bgDeep"] {
-    background-color: #ffffff !important;
-    border-color: rgba(20, 10, 50, 0.1) !important;
-    box-shadow: 0 4px 15px rgba(40, 20, 90, 0.05) !important;
-  }
-  html[data-theme="light"] .text-white,
-  html[data-theme="light"] .text-gray-100,
-  html[data-theme="light"] .text-gray-200,
-  html[data-theme="light"] .text-gray-300 {
-    color: #171233 !important;
-  }
-  html[data-theme="light"] .text-gray-400,
-  html[data-theme="light"] .text-gray-500 {
-    color: #4A4266 !important;
-  }
-  html[data-theme="light"] .text-gold {
-    color: #8B7CF6 !important; /* Фиолетовый акцент для светлой темы */
-  }
-  html[data-theme="light"] input,
-  html[data-theme="light"] textarea {
-    background-color: #F6F4FB !important;
-    color: #171233 !important;
-    border-color: rgba(20, 10, 50, 0.15) !important;
-  }
-  html[data-theme="light"] #toggle-track {
-    background-color: #EDE9F7 !important;
-  }
-</style>
 </body>
 </html>
