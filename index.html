@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Точка опоры — Карманный помощник и Трекер</title>
+    <!-- Подключение шрифтов Montserrat и Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDeep: '#0f1115',
+                        bgCard: '#161920',
+                        gold: '#d4af37',
+                        goldLight: '#f3d266',
+                        goldDim: 'rgba(212, 175, 55, 0.15)',
+                        emeraldSoft: '#34d399',
+                        roseSoft: '#fb7185'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f1115;
+            color: #f3f4f6;
+            font-family: 'Montserrat', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(52, 211, 153, 0.05) 0%, transparent 45%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism карточки */
+        .glass-card {
+            background: rgba(22, 25, 32, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-gold {
+            background: linear-gradient(145deg, rgba(28, 32, 42, 0.9), rgba(22, 25, 32, 0.95));
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.08);
+        }
+
+        /* Плавные анимации */
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-slide {
+            animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Анимация звуковой волны для голосовой таблетки */
+        .wave-bar {
+            width: 3px;
+            background-color: #d4af37;
+            border-radius: 999px;
+            transition: height 0.2s ease;
+        }
+        .playing .wave-bar {
+            animation: soundWave 0.9s infinite ease-in-out alternate;
+        }
+        .playing .wave-bar:nth-child(2n) { animation-duration: 0.65s; }
+        .playing .wave-bar:nth-child(3n) { animation-duration: 1.1s; }
+        .playing .wave-bar:nth-child(4n) { animation-duration: 0.8s; }
+
+        @keyframes soundWave {
+            0% { height: 5px; opacity: 0.4; }
+            100% { height: 22px; opacity: 1; }
+        }
+
+        /* Свечение Маяка устойчивости */
+        .beacon-glow {
+            filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.6));
+            transition: all 0.5s ease;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f1115; }
+        ::-webkit-scrollbar-thumb { background: #262b36; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+    </style>
+</head>
+<body class="py-6 px-4 sm:px-6 lg:px-8 antialiased selection:bg-gold selection:text-bgDeep">
+
+    <!-- ГЛАВНЫЙ КОНТЕЙНЕР БЛОКА «КАРМАННЫЙ ПОМОЩНИК» -->
+    <main id="tochka-opory-assistant" class="max-w-3xl mx-auto space-y-6">
+
+        <!-- 1. ШАПКА-ПРИВЕТСТВИЕ С ЭФФЕКТОМ ПРИСУТСТВИЯ И МЯГКИМ СТРИКОМ -->
+        <section class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
+            <!-- Декоративное свечение на фоне -->
+            <div class="absolute -top-24 -right-24 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+                <!-- Левая часть: Приветствие и Имя -->
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/25 text-gold text-xs font-medium mb-2.5">
+                        <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+                        <span>Карманный помощник · Мы рядом 💛</span>
+                    </div>
+                    <h1 class="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight flex flex-wrap items-baseline gap-x-2">
+                        <span id="greeting-time">Добрый день</span>,
+                        <button id="user-name-btn" onclick="openNameEdit()" class="text-gold hover:text-goldLight underline decoration-gold/40 decoration-dashed underline-offset-4 transition group inline-flex items-center gap-1.5" title="Нажми, чтобы изменить имя">
+                            <span id="user-name-display">Друг</span>
+                            <svg class="w-4 h-4 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                            </svg>
+                        </button>
+                    </h1>
+                    <!-- Поле быстрого ввода имени (скрыто по умолчанию) -->
+                    <div id="name-input-container" class="hidden mt-2 flex items-center gap-2">
+                        <input type="text" id="name-input-field" maxlength="20" placeholder="Как к тебе обращаться?" 
+                            class="bg-bgDeep/90 border border-gold/40 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none focus:border-gold w-48">
+                        <button onclick="saveUserName()" class="bg-gold text-bgDeep font-semibold text-xs px-3 py-2 rounded-xl hover:bg-goldLight transition">
+                            Сохранить
+                        </button>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                        Здесь можно ошибаться, брать паузу и идти в своем темпе.
+                    </p>
+                </div>
+
+                <!-- Правая часть: Счетчики (Мягкий стрик и XP) -->
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 self-start sm:self-center">
+                    <!-- Мягкий стрик -->
+                    <div class="bg-bgDeep/80 border border-white/10 rounded-2xl px-3.5 py-2 flex items-center gap-2.5" title="Дни с опорой никогда не сгорают при пропуске">
+                        <span class="text-xl">🔥</span>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span id="streak-count" class="font-bold text-base text-white">1</span>
+                                <span class="text-xs text-gray-300">дн. с опорой</span>
+                            </div>
+                            <span class="block text-[10px] text-emeraldSoft font-medium">✓ Право на паузу активно</span>
+                        </div>
+                    </div>
+
+                    <!-- Опыт XP -->
+                    <div class="bg-bgDeep/80 border border-gold/30 rounded-2xl px-3.5 py-2 flex items-center gap-2">
+                        <span class="text-xl">⭐</span>
+                        <div>
+                            <div class="flex items-center gap-1">
+                                <span id="xp-count" class="font-bold text-base text-gold">0</span>
+                                <span class="text-xs text-gold/80 font-semibold">XP</span>
+                            </div>
+                            <span id="xp-level-label" class="block text-[10px] text-gray-400">Шаг за шагом</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Индикатор «Маяк устойчивости» + Кнопка экстренного заземления -->
+            <div class="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3 flex-1">
+                    <!-- Иконка маяка, которая светится ярче с ростом прогресса -->
+                    <div id="beacon-icon-wrap" class="w-10 h-10 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0 beacon-glow">
+                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0l-1.414-1.414M7.05 7.05L5.636 5.636M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-300 font-medium">Маяк устойчивости на сегодня</span>
+                            <span id="daily-progress-text" class="text-gold font-semibold">0 из 3 опор</span>
+                        </div>
+                        <div class="w-full h-2 bg-bgDeep rounded-full overflow-hidden border border-white/5">
+                            <div id="daily-progress-bar" class="h-full bg-gradient-to-r from-gold/80 to-goldLight transition-all duration-500 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка SOS-заземления прямо внутри блока -->
+                <button onclick="openGroundingModal()" class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-roseSoft/15 hover:bg-roseSoft/25 border border-roseSoft/30 text-roseSoft text-xs font-semibold transition active:scale-95">
+                    <span>🛟</span>
+                    <span>Накрывает? Заземление 5-4-3-2-1</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. ЧЕК-ИН СОСТОЯНИЯ: «КАК ТЫ ПРЯМО СЕЙЧАС?» -->
+        <section class="glass-card rounded-3xl p-5 sm:p-7">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Чек-ин состояния: как ты прямо сейчас?</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Выбери то, что ближе — Елена или Тимур подскажут, на что опереться.</p>
+                </div>
+                <span id="checkin-status-badge" class="text-[11px] text-gray-400 bg-white/5 px-3 py-1 rounded-full self-start sm:self-center">
+                    Выбери кружок состояния
+                </span>
+            </div>
+
+            <!-- 4 кнопки состояния -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button onclick="selectMood('energy')" id="mood-btn-energy" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🔋</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-semibold text-white leading-tight">Есть силы</div>
+                        <div class="text-[11px] text-gray-400">Готов действовать</div>
+                    </div>
+                </button>
+
+                <button onclick="selectMood('autopilot')" id="mood-btn-autopilot" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">😶</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div>
+                        <div class="text-[11px] text-gray-400">Устал, нет ресурса</div>
+                    </div>
+                </button>
+
+                <button onclick="selectMood('anxiety')" id="mood-btn-anxiety" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🌪</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-semibold text-white leading-tight">Тревожно</div>
+                        <div class="text-[11px] text-gray-400">Мысли скачут</div>
+                    </div>
+                </button>
+
+                <button onclick="selectMood('money')" id="mood-btn-money" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
+                    <span class="text-2xl group-hover:scale-110 transition-transform origin-left">💸</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div>
+                        <div class="text-[11px] text-gray-400">Считаю до стипендии</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Раскрывающаяся живая карточка-ответ от куратора -->
+            <div id="curator-checkin-response" class="hidden mt-5 pt-5 border-t border-white/10 animate-fade-slide">
+                <div class="glass-card-gold rounded-2xl p-4 sm:p-5">
+                    <div class="flex items-start gap-3.5">
+                        <!-- Аватар куратора (ЕО или ТХ) -->
+                        <div id="curator-avatar" class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-gold font-serif font-bold text-lg flex items-center justify-center shrink-0 shadow-lg">
+                            ЕО
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h3 id="curator-name" class="text-sm font-bold text-white">Елена Осинцева</h3>
+                                    <p id="curator-role" class="text-[11px] text-gold">Психологическая опора и бережная поддержка</p>
+                                </div>
+                                <span class="text-[10px] bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full text-gray-300">Личный отклик</span>
+                            </div>
+
+                            <!-- Текст живого ответа -->
+                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">
+                                Слышу тебя. Когда мысли скачут, не нужно пытаться решить всё сразу.
+                            </p>
+
+                            <!-- Встроенный мини-аудиоплеер «Голосовая таблетка поддержки (45 сек)» -->
+                            <div class="mt-4 bg-bgDeep/90 border border-white/10 rounded-xl p-3">
+                                <div class="flex items-center justify-between gap-3">
+                                    <button onclick="toggleVoicePill()" id="voice-play-btn" class="w-9 h-9 rounded-xl bg-gold text-bgDeep flex items-center justify-center shrink-0 hover:bg-goldLight transition active:scale-95">
+                                        <!-- Иконка Play -->
+                                        <svg id="voice-icon-play" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M4.5 3.5v13l11-6.5-11-6.5z"/>
+                                        </svg>
+                                        <!-- Иконка Pause -->
+                                        <svg id="voice-icon-pause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between text-[11px] mb-1">
+                                            <span id="voice-pill-title" class="font-semibold text-gold truncate">🎧 Голосовая таблетка поддержки</span>
+                                            <span id="voice-timer" class="text-gray-400 font-mono">0:45</span>
+                                        </div>
+                                        <!-- Визуализация звуковой волны -->
+                                        <div id="voice-waveform" class="flex items-center gap-1 h-6 overflow-hidden">
+                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div>
+                                            <div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div>
+                                            <div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div>
+                                            <div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div>
+                                            <div class="wave-bar h-5"></div><div class="wave-bar h-3"></div><div class="wave-bar h-4"></div>
+                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div>
+                                            <div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-3"></div>
+                                            <div class="wave-bar h-4"></div><div class="wave-bar h-2"></div><div class="wave-bar h-3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Живая расшифровка голосовой заметки (показывается при проигрывании или по клику) -->
+                                <div id="voice-transcript-box" class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
+                                    <span class="not-italic text-[10px] uppercase tracking-wider text-gold font-semibold block mb-0.5">Голосовая заметка куратора:</span>
+                                    <span id="voice-transcript-text">«Положи стопы на пол, почувствуй опору...»</span>
+                                </div>
+                            </div>
+
+                            <!-- Быстрые кнопки перехода к инструментам проекта -->
+                            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+                                <a id="curator-action-link" href="breathing.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
+                                    <span id="curator-action-text">🌿 Включить практику дыхания</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                    </svg>
+                                </a>
+                                <button onclick="activateLowEnergyFromCheckin()" id="suggest-low-energy-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 text-xs font-medium transition">
+                                    <span>🪫 Включить режим «Тяжелый день»</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ТРЕКЕР МИКРО-ПРИВЫЧЕК «МОИ 3 ОПОРЫ НА СЕГОДНЯ» С ТУМБЛЕРОМ «ТЯЖЕЛЫЙ ДЕНЬ» -->
+        <section class="glass-card rounded-3xl p-5 sm:p-7">
+            <!-- Заголовок + Тумблер режима энергосбережения -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Мои 3 опоры на сегодня</h2>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full bg-gold/15 text-gold font-semibold">+15 XP за шаг</span>
+                    </div>
+                    <p id="habits-subtitle" class="text-xs sm:text-sm text-gray-400 mt-1">
+                        Маленькие шаги без перфекционизма. Отмечай то, что получилось.
+                    </p>
+                </div>
+
+                <!-- Тумблер «Режим энергосбережения (Сегодня нет сил)» -->
+                <label for="low-energy-toggle" class="cursor-pointer select-none bg-bgDeep/90 hover:bg-bgDeep border border-white/15 rounded-2xl p-3 flex items-center justify-between gap-3.5 transition">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xl">🪫</span>
+                        <div>
+                            <div class="text-xs font-bold text-white">Режим энергосбережения</div>
+                            <div class="text-[11px] text-gray-400">Тумблер «Сегодня нет сил»</div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <input type="checkbox" id="low-energy-toggle" class="sr-only" onchange="toggleLowEnergyMode(this.checked)">
+                        <div id="toggle-track" class="w-11 h-6 bg-gray-700 rounded-full transition-colors"></div>
+                        <div id="toggle-dot" class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Информационная плашка при включении режима «Тяжелый день» -->
+            <div id="low-energy-banner" class="hidden mt-4 rounded-2xl bg-emeraldSoft/10 border border-emeraldSoft/30 px-4 py-3 text-xs text-emeraldSoft flex items-center gap-2.5 animate-fade-slide">
+                <span class="text-base">🌿</span>
+                <span><strong>Включен бережный режим:</strong> все задачи дня упрощены до микро-шагов заботы о себе. Даже один вдох — это уже победа.</span>
+            </div>
+
+            <!-- Список из 3 микро-привычек -->
+            <div id="habits-list" class="mt-5 space-y-3.5">
+                <!-- Генерируется динамически через JS -->
+            </div>
+
+            <!-- Живое всплывающее сообщение-отклик от куратора при клике на галочку -->
+            <div id="habit-feedback-toast" class="hidden mt-5 rounded-2xl bg-gradient-to-r from-bgDeep via-bgCard to-bgDeep border border-gold/40 p-4 animate-fade-slide">
+                <div class="flex items-start gap-3">
+                    <div id="feedback-avatar" class="w-10 h-10 rounded-xl bg-gold/20 border border-gold text-gold font-serif font-bold text-sm flex items-center justify-center shrink-0">
+                        ТХ
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <span id="feedback-author" class="text-xs font-bold text-gold">Тимур Хайретдинов</span>
+                            <span class="text-[11px] font-semibold text-emeraldSoft">+15 ⭐ XP в Маяк</span>
+                        </div>
+                        <p id="feedback-text" class="text-xs sm:text-sm text-gray-200 mt-1 leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Финальная карточка: «Точка опоры дня собрана!» (когда выполнены все 3) -->
+            <div id="day-complete-banner" class="hidden mt-6 glass-card-gold rounded-2xl p-5 sm:p-6 text-center animate-fade-slide">
+                <div class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-2xl flex items-center justify-center mx-auto mb-3">
+                    ✨
+                </div>
+                <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Точка опоры дня собрана!</h3>
+                <p class="text-xs sm:text-sm text-gray-200 max-w-xl mx-auto mt-2 leading-relaxed">
+                    <strong>Елена и Тимур:</strong> «Гордимся тобой! Ты нашел время для себя, своих границ и порядка в делах. Именно из таких маленьких ежедневных шагов и складывается настоящая взрослая устойчивость. Спокойного тебе вечера 💛»
+                </p>
+                <div class="mt-4 flex flex-wrap justify-center gap-3">
+                    <a href="notebook.html" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
+                        📓 Записать мысль дня в Тетрадь
+                    </a>
+                    <a href="budget.html" class="px-4 py-2 rounded-xl bg-white/10 text-white font-medium text-xs hover:bg-white/15 transition">
+                        📊 Открыть калькулятор бюджета
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ЗАМЕНА ПРИВЫЧКИ НА СВОЮ ИЛИ ПРЕСЕТ -->
+    <div id="edit-habit-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl max-w-md w-full p-6 border border-gold/30 animate-fade-slide">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                <h3 class="font-serif text-lg font-bold text-white">Настроить опору под себя</h3>
+                <button onclick="closeEditHabitModal()" class="text-gray-400 hover:text-white p-1">✕</button>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-xs text-gray-300 mb-1.5 font-medium">Впиши свой маленький шаг:</label>
+                <input type="text" id="custom-habit-input" maxlength="90" placeholder="Например: Отложить 100 рублей в копилку"
+                    class="w-full bg-bgDeep border border-white/15 focus:border-gold rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none">
+            </div>
+
+            <div class="mt-4">
+                <span class="block text-xs text-gray-400 mb-2">Или выбери готовый вариант от авторов:</span>
+                <div id="habit-presets-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Заполняется через JS в зависимости от слота -->
+                </div>
+            </div>
+
+            <div class="mt-5 flex justify-end gap-2.5 pt-3 border-t border-white/10">
+                <button onclick="resetSingleHabitToDefault()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-gray-300 transition">
+                    Вернуть стандартную
+                </button>
+                <button onclick="saveCustomHabit()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
+                    Сохранить шаг
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ЭКСТРЕННОЕ ЗАЗЕМЛЕНИЕ 5-4-3-2-1 -->
+    <div id="grounding-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card-gold rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-fade-slide relative">
+            <div class="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft flex items-center justify-center font-serif font-bold">
+                        ЕО
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Экстренное заземление 5-4-3-2-1</h3>
+                        <p class="text-xs text-gray-300">Елена Осинцева · Вернемся в «здесь и сейчас» за 1 минуту</p>
+                    </div>
+                </div>
+                <button onclick="closeGroundingModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
+            </div>
+
+            <p class="text-xs sm:text-sm text-gray-200 mt-4 leading-relaxed">
+                Если тревога или паника накрывают, мозг улетает в пугающее будущее. Давай мягко вернем его в реальность через органы чувств. Нажимай на шаги по очереди:
+            </p>
+
+            <!-- Интерактивные шаги 5-4-3-2-1 -->
+            <div class="mt-4 space-y-2.5" id="grounding-steps-container">
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition">
+                    <span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">5</span>
+                    <span class="text-xs sm:text-sm text-gray-200 flex-1">Найди глазами <strong>5 предметов</strong> одного цвета вокруг себя</span>
+                    <span class="step-check text-emeraldSoft hidden">✓</span>
+                </button>
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition">
+                    <span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">4</span>
+                    <span class="text-xs sm:text-sm text-gray-200 flex-1">Прикоснись к <strong>4 разным текстурам</strong> (одежда, стол, волосы, прохладная стена)</span>
+                    <span class="step-check text-emeraldSoft hidden">✓</span>
+                </button>
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition">
+                    <span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">3</span>
+                    <span class="text-xs sm:text-sm text-gray-200 flex-1">Услышь <strong>3 отдельных звука</strong> (гул за окном, свое дыхание, шорох)</span>
+                    <span class="step-check text-emeraldSoft hidden">✓</span>
+                </button>
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition">
+                    <span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">2</span>
+                    <span class="text-xs sm:text-sm text-gray-200 flex-1">Почувствуй <strong>2 запаха</strong> в воздухе или вспомни любимый аромат</span>
+                    <span class="step-check text-emeraldSoft hidden">✓</span>
+                </button>
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition">
+                    <span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">1</span>
+                    <span class="text-xs sm:text-sm text-gray-200 flex-1">Сделай <strong>1 медленный выдох</strong> длиннее вдоха и скажи себе: «Сейчас я в безопасности»</span>
+                    <span class="step-check text-emeraldSoft hidden">✓</span>
+                </button>
+            </div>
+
+            <!-- Экстренные контакты и переход к дыханию -->
+            <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                <a href="tel:88002000122" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft text-xs font-semibold hover:bg-roseSoft/30 transition">
+                    <span>📞 Бесплатная линия поддержки: 8-800-2000-122</span>
+                </a>
+                <div class="flex items-center gap-2">
+                    <a href="breathing.html" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium transition">
+                        🌿 Дыхание
+                    </a>
+                    <button onclick="closeGroundingModal()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">
+                        Мне стало легче
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: ВСЯ ЛОГИКА, СОХРАНЕНИЕ В LOCALSTORAGE И ЖИВЫЕ ОТКЛИКИ КУРАТОРОВ -->
+    <script>
+        // Ключ хранилища (синхронизируется со счетчиками проекта)
+        const STORAGE_KEY = 'tochka_opory_assistant_v1';
+
+        // База живых откликов для Чек-ина состояния
+        const MOOD_DATA = {
+            energy: {
+                curator: 'Тимур Хайретдинов',
+                initials: 'ТХ',
+                role: 'Финансовая ясность и фокус в делах',
+                message: 'Отличный настрой! Пока есть заряд энергии, давай не будем распылять его на десять мелких задач сразу. Выбери главное дело дня и загляни на пару минут в свой бюджет — когда в цифрах порядок, уверенности становится еще больше.',
+                voiceTitle: '🎧 Голосовая заметка Тимура: «Как удержать фокус»',
+                transcript: '«Привет! Очень рад, что сегодня у тебя есть ресурс. Мой главный совет на такие дни — не пытайся за один присест свернуть горы и закрыть все хвосты за семестр. Сделай три опорных шага из нашего списка ниже, зафиксируй результат в рабочей тетради и обязательно оставь силы на вечерний отдых. Действуем спокойно и с холодной головой!»',
+                actionText: '📊 Открыть калькулятор бюджета',
+                actionLink: 'budget.html',
+                suggestLowEnergy: false
+            },
+            autopilot: {
+                curator: 'Елена Осинцева',
+                initials: 'ЕО',
+                role: 'Психологическая опора и бережная поддержка',
+                message: 'Быть на автопилоте — это нормальная защитная реакция организма, когда учеба, дедлайны и быт наваливаются одновременно. Ты не робот. Давай сегодня снизим планку ожиданий от себя и переключим трекер в щадящий режим.',
+                voiceTitle: '🎧 Голосовая заметка Елены: «Разреши себе замедлиться»',
+                transcript: '«Выдохни. Если сегодня ты просто встал, умылся и открыл это приложение — ты уже справляешься. Усталость — это не лень, это сигнал нервной системы, что батарейка села. Нажми кнопку энергосбережения ниже: мы уберем все сложные задачи и оставим только маленькие жесты заботы о себе. Я рядом».',
+                actionText: '📓 Выгрузить мысли в Тетрадь',
+                actionLink: 'notebook.html',
+                suggestLowEnergy: true
+            },
+            anxiety: {
+                curator: 'Елена Осинцева',
+                initials: 'ЕО',
+                role: 'Психологическая опора и бережная поддержка',
+                message: 'Слышу тебя. Когда мысли скачут, а внутри все сжимается, бесполезно заставлять себя учиться или считать деньги — сначала нужно успокоить тело. Давай сделаем паузу на 2 минуты и вернем ощущение твердой почвы под ногами.',
+                voiceTitle: '🎧 Голосовая заметка Елены: «Точка спокойствия»',
+                transcript: '«Прямо сейчас почувствуй, как твои стопы стоят на полу, а спина касается опоры. Твоя тревога пытается защитить тебя, прокручивая сотни сценариев, но прямо в эту секунду тебе ничего не угрожает. Сделай плавный вдох носом на четыре счета... и длинный, мягкий выдох. Все задачи подождут пару минут».',
+                actionText: '🌿 Включить практику дыхания',
+                actionLink: 'breathing.html',
+                suggestLowEnergy: true
+            },
+            money: {
+                curator: 'Тимур Хайретдинов',
+                initials: 'ТХ',
+                role: 'Финансовая ясность и антикризисный план',
+                message: 'Понимаю это неприятное чувство, когда до стипендии или подработки еще далеко, а баланс тает. Главное правило сейчас — никакой паники и самобичевания за прошлые траты. Деньги любят спокойный счет: давай просто посмотрим на цифры без эмоций.',
+                voiceTitle: '🎧 Голосовая заметка Тимура: «Антикризисный шаг по деньгам»',
+                transcript: '«Друг, нехватка денег в студенчестве — история знакомая каждому, это временно и это решаемо. Самая частая ошибка в стрессе — вообще бояться открывать баланс или, наоборот, махнуть рукой и потратить остаток на импульсивную ерунду. Давай сегодня спокойно прикинем дневной лимит на базовые нужды и заморозим необязательные покупки на 24 часа. Ты справишься!»',
+                actionText: '📊 Рассчитать антикризисный бюджет',
+                actionLink: 'budget.html',
+                suggestLowEnergy: false
+            }
+        };
+
+        // Стандартные привычки для Обычного режима и Режима «Тяжелый день»
+        const DEFAULT_HABITS = [
+            {
+                id: 'fin',
+                category: 'Финансы · Тимур',
+                curatorInitials: 'ТХ',
+                curatorName: 'Тимур Хайретдинов',
+                normalText: 'Записать траты за день или проверить остаток без самокритики',
+                lowEnergyText: 'Просто не ругать себя за сегодняшние покупки — мы разберемся с этим позже',
+                presets: [
+                    'Записать траты за день или проверить остаток без самокритики',
+                    'День без импульсивных покупок (пауза 10 минут перед оплатой)',
+                    'Отложить 50–100 ₽ в неприкосновенную копилку безопасности',
+                    'Проверить подписки и план расходов до конца недели'
+                ]
+            },
+            {
+                id: 'psy',
+                category: 'Психология · Елена',
+                curatorInitials: 'ЕО',
+                curatorName: 'Елена Осинцева',
+                normalText: 'Сделать 5-минутную паузу в тишине без телефона и соцсетей',
+                lowEnergyText: 'Сделать 3 глубоких вдоха и выдоха прямо сейчас, опустив плечи',
+                presets: [
+                    'Сделать 5-минутную паузу в тишине без телефона и соцсетей',
+                    'Назвать свою главную эмоцию дня без деления на «плохую/хорошую»',
+                    'Пройти 2 минуты квадратного дыхания перед сном или парой',
+                    'Мягко сказать «нет» делу, на которое сегодня нет ресурса'
+                ]
+            },
+            {
+                id: 'res',
+                category: 'Ресурс и Опора · Общее',
+                curatorInitials: 'ЕО',
+                curatorName: 'Елена и Тимур',
+                normalText: 'Похвалить себя за 1 маленькое дело в рабочей тетради',
+                lowEnergyText: 'Выпить стакан чистой воды и разрешить себе отдохнуть без чувства вины',
+                presets: [
+                    'Похвалить себя за 1 маленькое дело в рабочей тетради',
+                    'Лечь спать на 30 минут раньше обычного',
+                    'Выйти на свежий воздух хотя бы на 15 минут без спешки',
+                    'Приготовить нормальный прием пищи вместо перекуса на бегу'
+                ]
+            }
+        ];
+
+        // Живые реплики кураторов при отметке галочки (под категорию и режим)
+        const FEEDBACK_QUOTES = {
+            fin: {
+                normal: [
+                    'Красавчик! Даже если сегодня ушло лишнее на кофе — главное, что ты это видишь. Осознанность всегда важнее идеальных цифр.',
+                    'Отличный шаг! Финансовая опора начинается не с миллионов, а с честного взгляда на свои ежедневные расходы.',
+                    'Так держать. Когда ты контролируешь мелкие траты, тревога за будущее отступает сама собой.'
+                ],
+                low: [
+                    'Правильно делаешь. В тяжелый день чувство вины за потраченные деньги только забирает последние силы. Отложим расчеты на завтра.',
+                    'Поддерживаю! Сейчас твое спокойствие дороже любых таблиц. Восстановишь силы — и спокойно наведем порядок в бюджете.'
+                ]
+            },
+            psy: {
+                normal: [
+                    'Твоя нервная система сейчас говорит тебе огромное спасибо 💛 Даже 5 минут тишины перезагружают мозг лучше скроллинга ленты.',
+                    'Горжусь твоей бережностью к себе. Замечать свое состояние — это главный навык эмоциональной зрелости.',
+                    'Прекрасно! Ты только что подарил своей голове островок безопасности посреди суеты.'
+                ],
+                low: [
+                    'Вот так, мягко и плавно 💛 Три осознанных вдоха уже снижают уровень кортизола в крови. Ты молодец.',
+                    'Даже такое крошечное действие возвращает тебя в контакт с телом. Я очень рада, что ты позаботился о себе.'
+                ]
+            },
+            res: {
+                normal: [
+                    'Именно из таких маленьких побед и строится внутренняя опора! Мы часто замечаем промахи, но забываем хвалить себя за то, что сделали.',
+                    'Супер! Твое тело и разум — твой главный актив на время учебы. Спасибо, что вложился в свой ресурс сегодня.'
+                ],
+                low: [
+                    'Глоток воды и легальное право на отдых — это лучшая инвестиция в себя на сегодня. Передышка — это часть пути 🌿',
+                    'Отдыхай со спокойной душой. Мир не рухнет, если сегодня ты выберешь восстановление.'
+                ]
+            }
+        };
+
+        // Состояние приложения
+        let state = {
+            userName: 'Друг',
+            xp: 0,
+            streak: 1,
+            lastCompletedDate: null,
+            lastVisitDate: null,
+            selectedMood: null,
+            lowEnergyMode: false,
+            completedToday: { fin: false, psy: false, res: false },
+            customTexts: { fin: null, psy: null, res: null }
+        };
+
+        let currentEditingHabitId = null;
+        let voiceInterval = null;
+        let voiceSecondsLeft = 45;
+        let isVoicePlaying = false;
+
+        // Инициализация при загрузке
+        function initAssistant() {
+            loadState();
+            updateTimeGreeting();
+            renderHeaderStats();
+            renderLowEnergyToggle();
+            renderHabits();
+            if (state.selectedMood && MOOD_DATA[state.selectedMood]) {
+                selectMood(state.selectedMood, true);
+            }
+        }
+
+        // Загрузка и проверка нового дня («Мягкий стрик» без обнуления)
+        function loadState() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                }
+                // Синхронизация с возможными глобальными ключами Точки опоры
+                const globalXp = localStorage.getItem('tochka_xp');
+                if (globalXp && !saved) state.xp = parseInt(globalXp, 10) || 0;
+            } catch (e) {
+                console.warn('Ошибка чтения localStorage:', e);
+            }
+
+            // Если наступил новый календарный день — сбрасываем галочки дня, но СОХРАНЯЕМ стрик (Мягкий стрик)
+            if (state.lastVisitDate && state.lastVisitDate !== todayStr) {
+                state.completedToday = { fin: false, psy: false, res: false };
+                state.selectedMood = null;
+            }
+            state.lastVisitDate = todayStr;
+            saveState();
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                // Дублируем XP и стрик в простые ключи для синхронизации с другими страницами проекта
+                localStorage.setItem('tochka_xp', String(state.xp));
+                localStorage.setItem('tochka_streak', String(state.streak));
+            } catch (e) {
+                console.warn('Не удалось сохранить состояние:', e);
+            }
+        }
+
+        // 1. Определение времени суток
+        function updateTimeGreeting() {
+            const hour = new Date().getHours();
+            let greeting = 'Добрый день';
+            if (hour >= 5 && hour < 12) greeting = 'Доброе утро';
+            else if (hour >= 12 && hour < 18) greeting = 'Добрый день';
+            else if (hour >= 18 && hour < 23) greeting = 'Добрый вечер';
+            else greeting = 'Доброй ночи';
+
+            document.getElementById('greeting-time').textContent = greeting;
+            document.getElementById('user-name-display').textContent = state.userName || 'Друг';
+        }
+
+        // Редактирование имени в 1 клик
+        function openNameEdit() {
+            const container = document.getElementById('name-input-container');
+            const input = document.getElementById('name-input-field');
+            container.classList.remove('hidden');
+            input.value = state.userName === 'Друг' ? '' : state.userName;
+            input.focus();
+        }
+
+        function saveUserName() {
+            const input = document.getElementById('name-input-field');
+            const val = input.value.trim();
+            state.userName = val ? val : 'Друг';
+            document.getElementById('user-name-display').textContent = state.userName;
+            document.getElementById('name-input-container').classList.add('hidden');
+            saveState();
+        }
+
+        document.getElementById('name-input-field').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') saveUserName();
+        });
+
+        // Обновление счетчиков XP, Стрика и Маяка устойчивости
+        function renderHeaderStats() {
+            document.getElementById('streak-count').textContent = state.streak;
+            document.getElementById('xp-count').textContent = state.xp;
+
+            // Статус уровня XP
+            let levelLabel = 'Шаг за шагом';
+            if (state.xp >= 150) levelLabel = 'Крепкая опора';
+            else if (state.xp >= 60) levelLabel = 'В потоке';
+            document.getElementById('xp-level-label').textContent = levelLabel;
+
+            // Прогресс сегодняшних 3 привычек
+            const doneCount = Object.values(state.completedToday).filter(Boolean).length;
+            const percent = Math.round((doneCount / 3) * 100);
+            document.getElementById('daily-progress-text').textContent = `${doneCount} из 3 опор`;
+            document.getElementById('daily-progress-bar').style.width = `${percent}%`;
+
+            // Усиление свечения Маяка
+            const beacon = document.getElementById('beacon-icon-wrap');
+            if (doneCount === 3) {
+                beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))';
+                document.getElementById('day-complete-banner').classList.remove('hidden');
+            } else {
+                beacon.style.filter = 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.35))';
+                document.getElementById('day-complete-banner').classList.add('hidden');
+            }
+        }
+
+        // 2. Логика Чек-ина состояния
+        function selectMood(moodKey, skipSave = false) {
+            const data = MOOD_DATA[moodKey];
+            if (!data) return;
+
+            state.selectedMood = moodKey;
+            if (!skipSave) saveState();
+
+            // Подсветка активной кнопки
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.remove('border-gold', 'bg-gold/10');
+                btn.classList.add('border-white/10', 'bg-bgDeep/70');
+            });
+            const activeBtn = document.getElementById(`mood-btn-${moodKey}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-white/10', 'bg-bgDeep/70');
+                activeBtn.classList.add('border-gold', 'bg-gold/10');
+            }
+
+            // Заполнение карточки ответа куратора
+            document.getElementById('curator-avatar').textContent = data.initials;
+            document.getElementById('curator-name').textContent = data.curator;
+            document.getElementById('curator-role').textContent = data.role;
+            document.getElementById('curator-message').textContent = data.message;
+            document.getElementById('voice-pill-title').textContent = data.voiceTitle;
+            document.getElementById('voice-transcript-text').textContent = data.transcript;
+
+            const actionLink = document.getElementById('curator-action-link');
+            actionLink.href = data.actionLink;
+            document.getElementById('curator-action-text').textContent = data.actionText;
+
+            const lowEnergySuggestBtn = document.getElementById('suggest-low-energy-btn');
+            if (data.suggestLowEnergy && !state.lowEnergyMode) {
+                lowEnergySuggestBtn.classList.remove('hidden');
+            } else {
+                lowEnergySuggestBtn.classList.add('hidden');
+            }
+
+            document.getElementById('checkin-status-badge').textContent = `Отклик от: ${data.curator}`;
+            document.getElementById('curator-checkin-response').classList.remove('hidden');
+
+            // Сброс аудиоплеера при смене состояния
+            stopVoicePill();
+        }
+
+        // Симулятор голосовой таблетки поддержки (45 сек + синтез речи браузера при желании или визуальная волна)
+        function toggleVoicePill() {
+            if (isVoicePlaying) {
+                stopVoicePill();
+            } else {
+                startVoicePill();
+            }
+        }
+
+        function startVoicePill() {
+            isVoicePlaying = true;
+            document.getElementById('voice-icon-play').classList.add('hidden');
+            document.getElementById('voice-icon-pause').classList.remove('hidden');
+            document.getElementById('voice-waveform').classList.add('playing');
+
+            voiceInterval = setInterval(() => {
+                voiceSecondsLeft--;
+                if (voiceSecondsLeft <= 0) {
+                    stopVoicePill();
+                    voiceSecondsLeft = 45;
+                }
+                const secStr = voiceSecondsLeft < 10 ? `0${voiceSecondsLeft}` : voiceSecondsLeft;
+                document.getElementById('voice-timer').textContent = `0:${secStr}`;
+            }, 1000);
+        }
+
+        function stopVoicePill() {
+            isVoicePlaying = false;
+            if (voiceInterval) clearInterval(voiceInterval);
+            document.getElementById('voice-icon-play').classList.remove('hidden');
+            document.getElementById('voice-icon-pause').classList.add('hidden');
+            document.getElementById('voice-waveform').classList.remove('playing');
+            voiceSecondsLeft = 45;
+            document.getElementById('voice-timer').textContent = '0:45';
+        }
+
+        function activateLowEnergyFromCheckin() {
+            toggleLowEnergyMode(true);
+            document.getElementById('suggest-low-energy-btn').classList.add('hidden');
+            document.getElementById('habits-list').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 3. Тумблер «Тяжелый день» и Рендер 3 микро-привычек
+        function renderLowEnergyToggle() {
+            const checkbox = document.getElementById('low-energy-toggle');
+            const track = document.getElementById('toggle-track');
+            const dot = document.getElementById('toggle-dot');
+            const banner = document.getElementById('low-energy-banner');
+
+            checkbox.checked = state.lowEnergyMode;
+            if (state.lowEnergyMode) {
+                track.classList.remove('bg-gray-700');
+                track.classList.add('bg-emeraldSoft');
+                dot.style.transform = 'translateX(20px)';
+                banner.classList.remove('hidden');
+            } else {
+                track.classList.add('bg-gray-700');
+                track.classList.remove('bg-emeraldSoft');
+                dot.style.transform = 'translateX(0px)';
+                banner.classList.add('hidden');
+            }
+        }
+
+        function toggleLowEnergyMode(isEnabled) {
+            state.lowEnergyMode = isEnabled;
+            saveState();
+            renderLowEnergyToggle();
+            renderHabits();
+        }
+
+        function renderHabits() {
+            const container = document.getElementById('habits-list');
+            container.innerHTML = '';
+
+            DEFAULT_HABITS.forEach(habit => {
+                const isDone = !!state.completedToday[habit.id];
+                // Определяем текст привычки: если задана пользовательская — показываем её, иначе зависит от тумблера
+                let habitText = state.lowEnergyMode ? habit.lowEnergyText : habit.normalText;
+                if (state.customTexts[habit.id] && !state.lowEnergyMode) {
+                    habitText = state.customTexts[habit.id];
+                }
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border transition-all flex items-start sm:items-center justify-between gap-3.5 ${
+                    isDone 
+                        ? 'bg-gold/10 border-gold/40' 
+                        : 'bg-bgDeep/75 border-white/10 hover:border-white/20'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-start sm:items-center gap-3.5 flex-1 cursor-pointer" onclick="toggleHabitCompletion('${habit.id}')">
+                        <button type="button" class="mt-0.5 sm:mt-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition ${
+                            isDone 
+                                ? 'bg-gold border-gold text-bgDeep font-bold' 
+                                : 'border-gray-500 hover:border-gold'
+                        }">
+                            ${isDone ? '✓' : ''}
+                        </button>
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <span class="text-[11px] font-semibold uppercase tracking-wider ${isDone ? 'text-gold' : 'text-gray-400'}">
+                                    ${habit.category}
+                                </span>
+                                ${state.lowEnergyMode ? '<span class="text-[10px] px-2 py-0.2 rounded-full bg-emeraldSoft/15 text-emeraldSoft">Бережный шаг</span>' : ''}
+                            </div>
+                            <p class="text-xs sm:text-sm font-medium leading-snug ${isDone ? 'line-through text-gray-400' : 'text-white'}">
+                                ${habitText}
+                            </p>
+                        </div>
+                    </div>
+
+                    <button onclick="openEditHabitModal('${habit.id}')" class="text-gray-400 hover:text-gold p-2 rounded-xl hover:bg-white/5 transition shrink-0 text-xs flex items-center gap-1" title="Заменить привычку на свою">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                        </svg>
+                        <span class="hidden sm:inline">Изменить</span>
+                    </button>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Отметка выполнения привычки + начисление XP + живой отклик куратора
+        function toggleHabitCompletion(habitId) {
+            const wasDone = state.completedToday[habitId];
+            state.completedToday[habitId] = !wasDone;
+
+            const todayStr = new Date().toISOString().slice(0, 10);
+
+            if (!wasDone) {
+                // Начисляем +15 XP
+                state.xp += 15;
+                showHabitFeedback(habitId);
+
+                // Проверяем, выполнены ли все 3 привычки сегодня впервые
+                const allDone = Object.values(state.completedToday).every(Boolean);
+                if (allDone && state.lastCompletedDate !== todayStr) {
+                    state.streak += 1;
+                    state.lastCompletedDate = todayStr;
+                }
+            } else {
+                // Снимаем 15 XP при отмене галочки
+                state.xp = Math.max(0, state.xp - 15);
+                document.getElementById('habit-feedback-toast').classList.add('hidden');
+            }
+
+            saveState();
+            renderHabits();
+            renderHeaderStats();
+        }
+
+        function showHabitFeedback(habitId) {
+            const habitObj = DEFAULT_HABITS.find(h => h.id === habitId);
+            const modeKey = state.lowEnergyMode ? 'low' : 'normal';
+            const pool = FEEDBACK_QUOTES[habitId][modeKey];
+            const randomQuote = pool[Math.floor(Math.random() * pool.length)];
+
+            document.getElementById('feedback-avatar').textContent = habitObj.curatorInitials;
+            document.getElementById('feedback-author').textContent = `${habitObj.curatorName} · ${state.userName}, так держать!`;
+            document.getElementById('feedback-text').textContent = `«${randomQuote}»`;
+
+            const toast = document.getElementById('habit-feedback-toast');
+            toast.classList.remove('hidden');
+        }
+
+        // Модальное окно кастомизации привычки
+        function openEditHabitModal(habitId) {
+            currentEditingHabitId = habitId;
+            const habitObj = DEFAULT_HABITS.find(h => h.id === habitId);
+            const input = document.getElementById('custom-habit-input');
+            input.value = state.customTexts[habitId] || habitObj.normalText;
+
+            const presetsList = document.getElementById('habit-presets-list');
+            presetsList.innerHTML = '';
+            habitObj.presets.forEach(preset => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'w-full text-left text-xs text-gray-200 hover:text-white p-2.5 rounded-xl bg-bgDeep/70 hover:bg-gold/15 border border-white/5 hover:border-gold/30 transition';
+                btn.textContent = preset;
+                btn.onclick = () => { input.value = preset; };
+                presetsList.appendChild(btn);
+            });
+
+            document.getElementById('edit-habit-modal').classList.remove('hidden');
+        }
+
+        function closeEditHabitModal() {
+            document.getElementById('edit-habit-modal').classList.add('hidden');
+            currentEditingHabitId = null;
+        }
+
+        function saveCustomHabit() {
+            if (!currentEditingHabitId) return;
+            const val = document.getElementById('custom-habit-input').value.trim();
+            if (val) {
+                state.customTexts[currentEditingHabitId] = val;
+                // Если был включен режим энергосбережения, переключаем на обычный, чтобы пользователь увидел свою привычку
+                state.lowEnergyMode = false;
+                saveState();
+                renderLowEnergyToggle();
+                renderHabits();
+            }
+            closeEditHabitModal();
+        }
+
+        function resetSingleHabitToDefault() {
+            if (!currentEditingHabitId) return;
+            state.customTexts[currentEditingHabitId] = null;
+            saveState();
+            renderHabits();
+            closeEditHabitModal();
+        }
+
+        // 4. Экстренное заземление 5-4-3-2-1
+        function openGroundingModal() {
+            document.getElementById('grounding-modal').classList.remove('hidden');
+        }
+
+        function closeGroundingModal() {
+            document.getElementById('grounding-modal').classList.add('hidden');
+        }
+
+        function toggleGroundingStep(btnEl) {
+            const check = btnEl.querySelector('.step-check');
+            check.classList.toggle('hidden');
+            btnEl.classList.toggle('border-emeraldSoft/50');
+            btnEl.classList.toggle('bg-emeraldSoft/10');
+        }
+
+        // Старт после полной загрузки DOM
+        window.addEventListener('DOMContentLoaded', initAssistant);
+    </script>
+</body>
+</html>
