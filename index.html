@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark-gold">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Точка опоры — Карманный помощник</title>
+    <title>Точка опоры — Твой внутренний компас</title>
     <meta name="theme-color" content="#0f1115" />
+    <meta name="description" content="Бесплатное приложение для студентов. Финансы, психология, поддержка. Практика вместо лекций." />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     
@@ -44,7 +45,7 @@
                 radial-gradient(circle at 85% 85%, rgba(52, 211, 153, 0.05) 0%, transparent 45%);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 100px; /* Место для нижнего меню */
+            padding-bottom: 100px;
         }
         .glass-card {
             background: rgba(22, 25, 32, 0.82);
@@ -77,9 +78,37 @@
 </head>
 <body class="py-6 px-4 sm:px-6 lg:px-8 antialiased selection:bg-gold selection:text-bgDeep">
 
+    <!-- НОВАЯ ШАПКА С ЛОГОТИПОМ -->
+    <header class="max-w-3xl mx-auto mb-4">
+        <div class="glass-card rounded-2xl px-4 py-3 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <!-- Логотип-компас -->
+                <svg class="w-9 h-9 transition group-hover:rotate-45" style="color: #d4af37;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
+                    <path d="M50 15 L60 40 L85 50 L60 60 L50 85 L40 60 L15 50 L40 40 Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                    <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                </svg>
+                <div>
+                    <div class="font-serif font-bold text-lg text-white leading-tight">Точка опоры</div>
+                    <div class="text-[10px] text-gray-400 leading-tight">Твой внутренний компас</div>
+                </div>
+            </a>
+            <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 bg-bgDeep/70 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs">
+                    <span>🔥</span><span id="header-streak" class="font-bold text-white">1</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-bgDeep/70 border border-gold/30 rounded-xl px-2.5 py-1.5 text-xs">
+                    <span>⭐</span><span id="header-xp" class="font-bold text-gold">0</span>
+                </div>
+                <!-- Кнопка темы -->
+                <button id="globalThemeBtn" class="w-9 h-9 rounded-full bg-bgDeep/70 border border-white/10 text-gold flex items-center justify-center transition hover:rotate-12 text-base">☀️</button>
+            </div>
+        </div>
+    </header>
+
     <main id="tochka-opory-assistant" class="max-w-3xl mx-auto space-y-6">
 
-        <!-- 1. ШАПКА -->
+        <!-- 1. КАРТОЧКА-ПРИВЕТСТВИЕ -->
         <section class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
             <div class="absolute -top-24 -right-24 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
@@ -101,28 +130,6 @@
                     </div>
                     <p class="text-xs sm:text-sm text-gray-400 mt-1">Здесь можно ошибаться, брать паузу и идти в своем темпе.</p>
                 </div>
-                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 self-start sm:self-center">
-                    <div class="bg-bgDeep/80 border border-white/10 rounded-2xl px-3.5 py-2 flex items-center gap-2.5" title="Дни с опорой">
-                        <span class="text-xl">🔥</span>
-                        <div>
-                            <div class="flex items-center gap-1.5">
-                                <span id="streak-count" class="font-bold text-base text-white">1</span>
-                                <span class="text-xs text-gray-300">дн. с опорой</span>
-                            </div>
-                            <span class="block text-[10px] text-emeraldSoft font-medium">✓ Право на паузу</span>
-                        </div>
-                    </div>
-                    <div class="bg-bgDeep/80 border border-gold/30 rounded-2xl px-3.5 py-2 flex items-center gap-2">
-                        <span class="text-xl">⭐</span>
-                        <div>
-                            <div class="flex items-center gap-1">
-                                <span id="xp-count" class="font-bold text-base text-gold">0</span>
-                                <span class="text-xs text-gold/80 font-semibold">XP</span>
-                            </div>
-                            <span id="xp-level-label" class="block text-[10px] text-gray-400">Шаг за шагом</span>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div class="flex items-center gap-3 flex-1">
@@ -140,19 +147,18 @@
                     </div>
                 </div>
                 <button onclick="openGroundingModal()" class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-roseSoft/15 hover:bg-roseSoft/25 border border-roseSoft/30 text-roseSoft text-xs font-semibold transition active:scale-95">
-                    <span>🛟</span><span>Накрывает? Заземление 5-4-3-2-1</span>
+                    <span>🛟</span><span>Накрывает? Заземление</span>
                 </button>
             </div>
         </section>
 
-              <!-- 2. МОДУЛИ -->
+        <!-- 2. МОДУЛИ -->
         <section id="modules" class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">Три модуля</h2>
                 <span class="text-xs text-gold">Полное погружение</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <!-- Финансы -->
                 <a href="module-fin.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
                     <div class="flex items-center justify-between">
                         <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">💰</div>
@@ -165,7 +171,6 @@
                         </div>
                     </div>
                 </a>
-                <!-- Психология -->
                 <a href="module-psy.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
                     <div class="flex items-center justify-between">
                         <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🧠</div>
@@ -178,7 +183,6 @@
                         </div>
                     </div>
                 </a>
-                <!-- Поддержка -->
                 <a href="module-sup.html" class="glass-card p-5 rounded-2xl border border-white/10 hover:border-gold/40 transition group flex flex-col gap-3">
                     <div class="flex items-center justify-between">
                         <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl shrink-0">🆘</div>
@@ -194,7 +198,7 @@
             </div>
         </section>
 
-        <!-- 3. ЧЕК-ИН СОСТОЯНИЯ -->
+        <!-- 3. ЧЕК-ИН -->
         <section class="glass-card rounded-3xl p-5 sm:p-7">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
@@ -210,7 +214,7 @@
                 </button>
                 <button onclick="selectMood('autopilot')" id="mood-btn-autopilot" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
                     <span class="text-2xl group-hover:scale-110 transition-transform origin-left">😶</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div><div class="text-[11px] text-gray-400">Устал, нет ресурса</div></div>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">На автопилоте</div><div class="text-[11px] text-gray-400">Нет ресурса</div></div>
                 </button>
                 <button onclick="selectMood('anxiety')" id="mood-btn-anxiety" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
                     <span class="text-2xl group-hover:scale-110 transition-transform origin-left">🌪</span>
@@ -218,7 +222,7 @@
                 </button>
                 <button onclick="selectMood('money')" id="mood-btn-money" class="mood-btn group text-left p-3.5 rounded-2xl bg-bgDeep/70 hover:bg-bgDeep border border-white/10 hover:border-gold/50 transition-all flex flex-col justify-between h-24">
                     <span class="text-2xl group-hover:scale-110 transition-transform origin-left">💸</span>
-                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div><div class="text-[11px] text-gray-400">Считаю до стипендии</div></div>
+                    <div><div class="text-xs sm:text-sm font-semibold text-white leading-tight">Напряг с деньгами</div><div class="text-[11px] text-gray-400">До стипендии</div></div>
                 </button>
             </div>
             <div id="curator-checkin-response" class="hidden mt-5 pt-5 border-t border-white/10 animate-fade-slide">
@@ -232,9 +236,7 @@
                                     <p id="curator-role" class="text-[11px] text-gold">Психологическая опора</p>
                                 </div>
                             </div>
-                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">Слышу тебя. Когда мысли скачут, не нужно пытаться решить всё сразу.</p>
-                            
-                            <!-- Аудио -->
+                            <p id="curator-message" class="text-xs sm:text-sm text-gray-200 mt-3 leading-relaxed">Слышу тебя.</p>
                             <div class="mt-4 bg-bgDeep/90 border border-white/10 rounded-xl p-3">
                                 <div class="flex items-center justify-between gap-3">
                                     <button onclick="toggleVoicePill()" id="voice-play-btn" class="w-9 h-9 rounded-xl bg-gold text-bgDeep flex items-center justify-center shrink-0 hover:bg-goldLight transition active:scale-95">
@@ -247,13 +249,12 @@
                                             <span id="voice-timer" class="text-gray-400 font-mono">0:45</span>
                                         </div>
                                         <div id="voice-waveform" class="flex items-center gap-1 h-6 overflow-hidden">
-                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div><div class="wave-bar h-5"></div><div class="wave-bar h-3"></div><div class="wave-bar h-4"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div>
+                                            <div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-5"></div><div class="wave-bar h-2"></div><div class="wave-bar h-4"></div><div class="wave-bar h-3"></div><div class="wave-bar h-2"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="voice-transcript-box" class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
-                                    <span class="not-italic text-[10px] uppercase tracking-wider text-gold font-semibold block mb-0.5">Расшифровка:</span>
-                                    <span id="voice-transcript-text">«Положи стопы на пол, почувствуй опору...»</span>
+                                <div class="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-gray-300 italic leading-relaxed">
+                                    <span id="voice-transcript-text">«Положи стопы на пол...»</span>
                                 </div>
                             </div>
                             <div class="mt-4 flex flex-wrap items-center gap-2.5">
@@ -275,7 +276,7 @@
                         <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Мои 3 опоры</h2>
                         <span class="text-xs px-2.5 py-0.5 rounded-full bg-gold/15 text-gold font-semibold">+15 XP</span>
                     </div>
-                    <p id="habits-subtitle" class="text-xs sm:text-sm text-gray-400 mt-1">Маленькие шаги без перфекционизма.</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-1">Маленькие шаги без перфекционизма.</p>
                 </div>
                 <label for="low-energy-toggle" class="cursor-pointer select-none bg-bgDeep/90 hover:bg-bgDeep border border-white/15 rounded-2xl p-3 flex items-center justify-between gap-3.5 transition">
                     <div class="flex items-center gap-2.5">
@@ -290,7 +291,7 @@
                 </label>
             </div>
             <div id="low-energy-banner" class="hidden mt-4 rounded-2xl bg-emeraldSoft/10 border border-emeraldSoft/30 px-4 py-3 text-xs text-emeraldSoft flex items-center gap-2.5 animate-fade-slide">
-                <span class="text-base">🌿</span><span><strong>Бережный режим:</strong> задачи дня упрощены.</span>
+                <span class="text-base">🌿</span><span><strong>Бережный режим:</strong> задачи упрощены.</span>
             </div>
             <div id="habits-list" class="mt-5 space-y-3.5"></div>
             <div id="habit-feedback-toast" class="hidden mt-5 rounded-2xl bg-gradient-to-r from-bgDeep via-bgCard to-bgDeep border border-gold/40 p-4 animate-fade-slide">
@@ -308,13 +309,11 @@
             <div id="day-complete-banner" class="hidden mt-6 glass-card-gold rounded-2xl p-5 sm:p-6 text-center animate-fade-slide">
                 <div class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold text-2xl flex items-center justify-center mx-auto mb-3">✨</div>
                 <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Точка опоры дня собрана!</h3>
-                <p class="text-xs sm:text-sm text-gray-200 max-w-xl mx-auto mt-2 leading-relaxed"><strong>Елена и Тимур:</strong> «Гордимся тобой! Из таких маленьких шагов складывается устойчивость. Спокойного вечера 💛»</p>
-                <div class="mt-4 flex flex-wrap justify-center gap-3">
-                    <a href="notebook.html" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">📓 Тетрадь</a>
-                </div>
+                <p class="text-xs sm:text-sm text-gray-200 max-w-xl mx-auto mt-2 leading-relaxed"><strong>Елена и Тимур:</strong> «Гордимся тобой! Спокойного вечера 💛»</p>
             </div>
         </section>
-        <!-- БЕЙДЖИ -->
+
+        <!-- 5. БЕЙДЖИ -->
         <section class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">Достижения</h2>
@@ -323,150 +322,100 @@
                 <div id="achievementsWidget"></div>
             </div>
         </section>
-        <!-- 5. ИНСТРУМЕНТЫ (ДОБАВЛЕНО) -->
+
+        <!-- 6. ИНСТРУМЕНТЫ -->
         <section class="space-y-3">
             <div class="flex items-center justify-between px-2">
                 <h2 class="font-serif text-xl font-bold text-white">Инструменты</h2>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <a href="notebook.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">📓</span>
-                    <span class="text-xs font-semibold text-gray-300">Тетрадь</span>
-                </a>
-                <a href="breathing.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🌿</span>
-                    <span class="text-xs font-semibold text-gray-300">Дыхание</span>
-                </a>
-                <a href="budget.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">💰</span>
-                    <span class="text-xs font-semibold text-gray-300">Бюджет</span>
-                </a>
-                <a href="challenges.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🏆</span>
-                    <span class="text-xs font-semibold text-gray-300">Челленджи</span>
-                </a>
-                <a href="balance-wheel.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🎡</span>
-                    <span class="text-xs font-semibold text-gray-300">Колесо</span>
-                </a>
-                <a href="scam-game.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🕵️</span>
-                    <span class="text-xs font-semibold text-gray-300">Мошенник</span>
-                </a>
-                <a href="survive-test.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🌧</span>
-                    <span class="text-xs font-semibold text-gray-300">Пережить</span>
-                </a>
-                <a href="habit-calculator.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">💸</span>
-                    <span class="text-xs font-semibold text-gray-300">Привычки</span>
-                </a>
+                <a href="notebook.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">📓</span><span class="text-xs font-semibold text-gray-300">Тетрадь</span></a>
+                <a href="breathing.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🌿</span><span class="text-xs font-semibold text-gray-300">Дыхание</span></a>
+                <a href="budget.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">💰</span><span class="text-xs font-semibold text-gray-300">Бюджет</span></a>
+                <a href="challenges.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🏆</span><span class="text-xs font-semibold text-gray-300">Челленджи</span></a>
+                <a href="balance-wheel.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🎡</span><span class="text-xs font-semibold text-gray-300">Колесо</span></a>
+                <a href="scam-game.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🕵️</span><span class="text-xs font-semibold text-gray-300">Мошенник</span></a>
+                <a href="survive-test.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">🌧</span><span class="text-xs font-semibold text-gray-300">Пережить</span></a>
+                <a href="habit-calculator.html" class="glass-card p-4 rounded-2xl border border-white/10 hover:border-gold/40 transition flex flex-col items-center justify-center gap-2 group"><span class="text-2xl group-hover:scale-110 transition">💸</span><span class="text-xs font-semibold text-gray-300">Привычки</span></a>
             </div>
         </section>
 
     </main>
 
-    <!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКА ПРИВЫЧКИ -->
+    <!-- МОДАЛКИ (скопируй из прошлого кода) -->
     <div id="edit-habit-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card rounded-3xl max-w-md w-full p-6 border border-gold/30 animate-fade-slide">
-            <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                <h3 class="font-serif text-lg font-bold text-white">Настроить опору</h3>
-                <button onclick="closeEditHabitModal()" class="text-gray-400 hover:text-white p-1">✕</button>
-            </div>
-            <div class="mt-4">
-                <label class="block text-xs text-gray-300 mb-1.5 font-medium">Свой шаг:</label>
-                <input type="text" id="custom-habit-input" maxlength="90" placeholder="Например: Отложить 100 ₽" class="w-full bg-bgDeep border border-white/15 focus:border-gold rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none">
-            </div>
-            <div class="mt-4">
-                <span class="block text-xs text-gray-400 mb-2">Или выбери готовый:</span>
-                <div id="habit-presets-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-            </div>
-            <div class="mt-5 flex justify-end gap-2.5 pt-3 border-t border-white/10">
-                <button onclick="resetSingleHabitToDefault()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-gray-300 transition">Стандартную</button>
-                <button onclick="saveCustomHabit()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">Сохранить</button>
-            </div>
+            <div class="flex items-center justify-between pb-3 border-b border-white/10"><h3 class="font-serif text-lg font-bold text-white">Настроить опору</h3><button onclick="closeEditHabitModal()" class="text-gray-400 hover:text-white p-1">✕</button></div>
+            <div class="mt-4"><label class="block text-xs text-gray-300 mb-1.5 font-medium">Свой шаг:</label><input type="text" id="custom-habit-input" maxlength="90" class="w-full bg-bgDeep border border-white/15 focus:border-gold rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none"></div>
+            <div class="mt-4"><span class="block text-xs text-gray-400 mb-2">Или выбери готовый:</span><div id="habit-presets-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div></div>
+            <div class="mt-5 flex justify-end gap-2.5 pt-3 border-t border-white/10"><button onclick="resetSingleHabitToDefault()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-gray-300 transition">Стандартную</button><button onclick="saveCustomHabit()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">Сохранить</button></div>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ЗАЗЕМЛЕНИЕ 5-4-3-2-1 -->
     <div id="grounding-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
         <div class="glass-card-gold rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-fade-slide relative">
-            <div class="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft flex items-center justify-center font-serif font-bold">ЕО</div>
-                    <div><h3 class="font-serif text-lg sm:text-xl font-bold text-white">Заземление 5-4-3-2-1</h3><p class="text-xs text-gray-300">Вернемся в «здесь и сейчас»</p></div>
-                </div>
-                <button onclick="closeGroundingModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
-            </div>
-            <p class="text-xs sm:text-sm text-gray-200 mt-4 leading-relaxed">Если тревога накрывает, верни мозг в реальность:</p>
-            <div class="mt-4 space-y-2.5" id="grounding-steps-container">
-                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">5</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Найди глазами <strong>5 предметов</strong> одного цвета</span><span class="step-check text-emeraldSoft hidden">✓</span></button>
+            <div class="flex items-start justify-between gap-4 pb-4 border-b border-white/10"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-2xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft flex items-center justify-center font-serif font-bold">ЕО</div><div><h3 class="font-serif text-lg sm:text-xl font-bold text-white">Заземление 5-4-3-2-1</h3><p class="text-xs text-gray-300">Вернемся в «здесь и сейчас»</p></div></div><button onclick="closeGroundingModal()" class="text-gray-400 hover:text-white p-1 text-lg">✕</button></div>
+            <div class="mt-4 space-y-2.5">
+                <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">5</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Найди <strong>5 предметов</strong></span><span class="step-check text-emeraldSoft hidden">✓</span></button>
                 <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">4</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Прикоснись к <strong>4 текстурам</strong></span><span class="step-check text-emeraldSoft hidden">✓</span></button>
                 <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">3</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Услышь <strong>3 звука</strong></span><span class="step-check text-emeraldSoft hidden">✓</span></button>
                 <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">2</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Почувствуй <strong>2 запаха</strong></span><span class="step-check text-emeraldSoft hidden">✓</span></button>
                 <button onclick="toggleGroundingStep(this)" class="w-full text-left p-3 rounded-2xl bg-bgDeep/80 border border-white/10 hover:border-gold/40 flex items-center gap-3 transition"><span class="w-7 h-7 rounded-xl bg-gold/20 text-gold font-bold text-xs flex items-center justify-center shrink-0">1</span><span class="text-xs sm:text-sm text-gray-200 flex-1">Сделай <strong>1 выдох</strong> длиннее вдоха</span><span class="step-check text-emeraldSoft hidden">✓</span></button>
             </div>
-            <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                <a href="tel:88002000122" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft text-xs font-semibold hover:bg-roseSoft/30 transition"><span>📞 8-800-2000-122</span></a>
-                <button onclick="closeGroundingModal()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">Мне легче</button>
-            </div>
+            <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3"><a href="tel:88002000122" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-roseSoft/20 border border-roseSoft/40 text-roseSoft text-xs font-semibold hover:bg-roseSoft/30 transition"><span>📞 8-800-2000-122</span></a><button onclick="closeGroundingModal()" class="px-4 py-2 rounded-xl bg-gold text-bgDeep font-semibold text-xs hover:bg-goldLight transition">Мне легче</button></div>
         </div>
     </div>
 
+    <!-- СКРИПТЫ -->
     <script>
-        // СИНХРОНИЗАЦИЯ ДАННЫХ С УРОКАМИ
-        const GLOBAL_KEY = 'tochka_opory_v1'; // Ключ, который используют уроки
-        const ASSISTANT_KEY = 'tochka_opory_assistant_v1'; // Ключ этой страницы
+        const GLOBAL_KEY = 'tochka_opory_v1';
+        const ASSISTANT_KEY = 'tochka_opory_assistant_v1';
 
         const MOOD_DATA = {
-            energy: {
-                curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность',
-                message: 'Отличный настрой! Пока есть заряд, выбери главное дело и загляни в бюджет.',
-                voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Привет! Сделай три опорных шага из списка и оставь силы на отдых».', 
-                actionText: '📊 Бюджет', actionLink: 'budget.html', suggestLowEnergy: false
-            },
-            autopilot: {
-                curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора',
-                message: 'Быть на автопилоте — это нормальная защитная реакция. Ты не робот. Давай снизим планку.',
-                voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Выдохни. Если ты просто встал и открыл это приложение — ты уже справляешься. Отдых — это тоже работа».', 
-                actionText: '📓 Записать мысли', actionLink: 'notebook.html', suggestLowEnergy: true
-            },
-            anxiety: {
-                curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора',
-                message: 'Когда мысли скачут, сначала нужно успокоить тело. Давай сделаем паузу на 2 минуты.',
-                voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Почувствуй, как стопы стоят на полу. Прямо сейчас тебе ничего не угрожает. Сделай длинный выдох».', 
-                actionText: '🌿 Дыхание', actionLink: 'breathing.html', suggestLowEnergy: true
-            },
-            money: {
-                curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность',
-                message: 'Понимаю, когда баланс тает. Главное — без паники. Деньги любят спокойный счет.',
-                voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Нехватка денег в студенчестве — история знакомая. Давай прикинем дневной лимит и заморозим покупки на 24 часа».', 
-                actionText: '📊 Бюджет', actionLink: 'budget.html', suggestLowEnergy: false
-            }
+            energy: { curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность', message: 'Отличный настрой! Выбери главное дело и загляни в бюджет.', voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Привет! Сделай три шага и оставь силы на отдых».', actionText: '📊 Бюджет', actionLink: 'budget.html' },
+            autopilot: { curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора', message: 'Быть на автопилоте — это нормально. Ты не робот. Снизим планку.', voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Выдохни. Если ты просто встал и открыл приложение — ты справляешься».', actionText: '📓 Записать мысли', actionLink: 'notebook.html' },
+            anxiety: { curator: 'Елена Осинцева', initials: 'ЕО', role: 'Психологическая опора', message: 'Когда мысли скачут, сначала успокой тело.', voiceTitle: '🎧 Голосовая заметка Елены', transcript: '«Почувствуй стопы на полу. Тебе ничего не угрожает».', actionText: '🌿 Дыхание', actionLink: 'breathing.html' },
+            money: { curator: 'Тимур Хайретдинов', initials: 'ТХ', role: 'Финансовая ясность', message: 'Понимаю. Главное — без паники. Деньги любят спокойный счет.', voiceTitle: '🎧 Голосовая заметка Тимура', transcript: '«Нехватка денег в студенчестве — это временно. Прикинем лимит».', actionText: '📊 Бюджет', actionLink: 'budget.html' }
         };
 
         const DEFAULT_HABITS = [
-            { id: 'fin', category: 'Финансы · Тимур', curatorInitials: 'ТХ', curatorName: 'Тимур', normalText: 'Записать траты за день', lowEnergyText: 'Просто не ругать себя за сегодняшние покупки', presets: ['Записать траты', 'Отложить 100 ₽', 'Проверить подписки'] },
-            { id: 'psy', category: 'Психология · Елена', curatorInitials: 'ЕО', curatorName: 'Елена', normalText: 'Сделать 5-минутную паузу без телефона', lowEnergyText: 'Сделать 3 глубоких вдоха и выдоха', presets: ['Пауза 5 минут', 'Назвать эмоцию', 'Квадратное дыхание'] },
-            { id: 'res', category: 'Ресурс · Общее', curatorInitials: 'ЕО', curatorName: 'Елена и Тимур', normalText: 'Похвалить себя за 1 маленькое дело', lowEnergyText: 'Выпить воды и разрешить отдохнуть', presets: ['Похвалить себя', 'Лечь спать раньше', 'Выйти на воздух'] }
+            { id: 'fin', category: 'Финансы · Тимур', curatorInitials: 'ТХ', curatorName: 'Тимур', normalText: 'Записать траты за день', lowEnergyText: 'Не ругать себя за покупки', presets: ['Записать траты', 'Отложить 100 ₽', 'Проверить подписки'] },
+            { id: 'psy', category: 'Психология · Елена', curatorInitials: 'ЕО', curatorName: 'Елена', normalText: 'Сделать 5-минутную паузу', lowEnergyText: 'Сделать 3 глубоких вдоха', presets: ['Пауза 5 минут', 'Назвать эмоцию', 'Дыхание'] },
+            { id: 'res', category: 'Ресурс · Общее', curatorInitials: 'ЕО', curatorName: 'Елена и Тимур', normalText: 'Похвалить себя за 1 дело', lowEnergyText: 'Выпить воды и отдохнуть', presets: ['Похвалить себя', 'Лечь раньше', 'Прогулка'] }
         ];
 
         const FEEDBACK_QUOTES = {
-            fin: { normal: ['Красавчик! Даже если ушло лишнее — главное, ты это видишь.', 'Отличный шаг! Опора начинается с честного взгляда.'], low: ['Правильно. В тяжелый день чувство вины только забирает силы.', 'Отложим расчеты на завтра. Восстановишь силы — наведем порядок.'] },
-            psy: { normal: ['Твоя нервная система говорит спасибо 💛', 'Горжусь твоей бережностью к себе.'], low: ['Вот так, мягко и плавно. Три вдоха уже снижают кортизол.', 'Даже крошечное действие возвращает в контакт с телом.'] },
-            res: { normal: ['Именно из таких побед строится внутренняя опора!', 'Супер! Твое тело и разум — главный актив.'], low: ['Глоток воды и право на отдых — лучшая инвестиция.', 'Отдыхай со спокойной душой. Мир не рухнет.'] }
+            fin: { normal: ['Красавчик! Главное, ты это видишь.', 'Отличный шаг!'], low: ['Правильно. В тяжелый день вина забирает силы.', 'Отложим расчеты на завтра.'] },
+            psy: { normal: ['Твоя нервная система говорит спасибо 💛', 'Горжусь твоей бережностью.'], low: ['Вот так, мягко. Вдохи снижают кортизол.', 'Даже крошечное действие возвращает в тело.'] },
+            res: { normal: ['Из таких побед строится опора!', 'Супер! Твой ресурс — главный актив.'], low: ['Глоток воды и отдых — лучшая инвестиция.', 'Отдыхай спокойно.'] }
         };
 
         let state = { userName: 'Друг', xp: 0, streak: 1, lastCompletedDate: null, lastVisitDate: null, selectedMood: null, lowEnergyMode: false, completedToday: { fin: false, psy: false, res: false }, customTexts: { fin: null, psy: null, res: null } };
         let currentEditingHabitId = null; let voiceInterval = null; let voiceSecondsLeft = 45; let isVoicePlaying = false;
 
         function initAssistant() {
-            loadState();
-            updateTimeGreeting();
-            renderHeaderStats();
-            renderLowEnergyToggle();
-            renderHabits();
+            loadState(); updateTimeGreeting(); renderHeaderStats(); renderLowEnergyToggle(); renderHabits(); renderModulesProgress();
             if (state.selectedMood && MOOD_DATA[state.selectedMood]) selectMood(state.selectedMood, true);
+        }
+
+        function renderModulesProgress() {
+            try {
+                const globalStore = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
+                const ld = globalStore.lessonsDone || {};
+                const finDone = (ld.fin || []).length;
+                const psyDone = (ld.psy || []).length;
+                const supDone = (ld.sup || []).length;
+                
+                const set = (id, done, total) => {
+                    const fill = document.getElementById('prog-' + id);
+                    const text = document.getElementById('progText-' + id);
+                    if (fill) fill.style.width = Math.round((done/total)*100) + '%';
+                    if (text) text.textContent = done + ' / ' + total;
+                };
+                set('fin', finDone, 8);
+                set('psy', psyDone, 8);
+                set('sup', supDone, 6);
+            } catch(e) {}
         }
 
         function loadState() {
@@ -474,14 +423,10 @@
             try {
                 const saved = localStorage.getItem(ASSISTANT_KEY);
                 if (saved) state = { ...state, ...JSON.parse(saved) };
-                
-                // БЕРЕМ XP И СТРИК ИЗ ОСНОВНОГО ПРИЛОЖЕНИЯ (уроков)
                 const globalStore = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
                 if (globalStore.xp !== undefined) state.xp = globalStore.xp;
                 if (globalStore.streak !== undefined) state.streak = globalStore.streak;
-                
             } catch (e) { console.warn(e); }
-
             if (state.lastVisitDate && state.lastVisitDate !== todayStr) {
                 state.completedToday = { fin: false, psy: false, res: false };
                 state.selectedMood = null;
@@ -493,10 +438,8 @@
         function saveState() {
             try {
                 localStorage.setItem(ASSISTANT_KEY, JSON.stringify(state));
-                // Синхронизируем обратно в глобальное хранилище
                 const globalStore = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
-                globalStore.xp = state.xp;
-                globalStore.streak = state.streak;
+                globalStore.xp = state.xp; globalStore.streak = state.streak;
                 localStorage.setItem(GLOBAL_KEY, JSON.stringify(globalStore));
             } catch (e) { console.warn(e); }
         }
@@ -508,49 +451,27 @@
             document.getElementById('user-name-display').textContent = state.userName || 'Друг';
         }
 
-        function openNameEdit() {
-            document.getElementById('name-input-container').classList.remove('hidden');
-            const input = document.getElementById('name-input-field');
-            input.value = state.userName === 'Друг' ? '' : state.userName;
-            input.focus();
-        }
-
-        function saveUserName() {
-            const val = document.getElementById('name-input-field').value.trim();
-            state.userName = val ? val : 'Друг';
-            document.getElementById('user-name-display').textContent = state.userName;
-            document.getElementById('name-input-container').classList.add('hidden');
-            saveState();
-        }
-
-        document.getElementById('name-input-field').addEventListener('keydown', function(e) { if (e.key === 'Enter') saveUserName(); });
+        function openNameEdit() { document.getElementById('name-input-container').classList.remove('hidden'); const i = document.getElementById('name-input-field'); i.value = state.userName === 'Друг' ? '' : state.userName; i.focus(); }
+        function saveUserName() { const v = document.getElementById('name-input-field').value.trim(); state.userName = v ? v : 'Друг'; document.getElementById('user-name-display').textContent = state.userName; document.getElementById('name-input-container').classList.add('hidden'); saveState(); }
+        document.getElementById('name-input-field').addEventListener('keydown', e => { if (e.key === 'Enter') saveUserName(); });
 
         function renderHeaderStats() {
-            document.getElementById('streak-count').textContent = state.streak;
-            document.getElementById('xp-count').textContent = state.xp;
-            document.getElementById('xp-level-label').textContent = state.xp >= 150 ? 'Крепкая опора' : state.xp >= 60 ? 'В потоке' : 'Шаг за шагом';
+            document.getElementById('header-streak').textContent = state.streak;
+            document.getElementById('header-xp').textContent = state.xp;
             const doneCount = Object.values(state.completedToday).filter(Boolean).length;
             document.getElementById('daily-progress-text').textContent = `${doneCount} из 3 опор`;
             document.getElementById('daily-progress-bar').style.width = `${Math.round((doneCount / 3) * 100)}%`;
-            
             const beacon = document.getElementById('beacon-icon-wrap');
-            if (doneCount === 3) {
-                beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))';
-                document.getElementById('day-complete-banner').classList.remove('hidden');
-            } else {
-                beacon.style.filter = 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.35))';
-                document.getElementById('day-complete-banner').classList.add('hidden');
-            }
+            if (doneCount === 3) { beacon.style.filter = 'drop-shadow(0 0 18px rgba(212, 175, 55, 0.95))'; document.getElementById('day-complete-banner').classList.remove('hidden'); }
+            else { beacon.style.filter = 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.35))'; document.getElementById('day-complete-banner').classList.add('hidden'); }
         }
 
         function selectMood(moodKey, skipSave = false) {
             const data = MOOD_DATA[moodKey]; if (!data) return;
-            state.selectedMood = moodKey;
-            if (!skipSave) saveState();
+            state.selectedMood = moodKey; if (!skipSave) saveState();
             document.querySelectorAll('.mood-btn').forEach(btn => { btn.classList.remove('border-gold', 'bg-gold/10'); btn.classList.add('border-white/10', 'bg-bgDeep/70'); });
             const activeBtn = document.getElementById(`mood-btn-${moodKey}`);
             if (activeBtn) { activeBtn.classList.remove('border-white/10', 'bg-bgDeep/70'); activeBtn.classList.add('border-gold', 'bg-gold/10'); }
-            
             document.getElementById('curator-avatar').textContent = data.initials;
             document.getElementById('curator-name').textContent = data.curator;
             document.getElementById('curator-role').textContent = data.role;
@@ -577,131 +498,93 @@
             }, 1000);
         }
         function stopVoicePill() {
-            isVoicePlaying = false;
-            if (voiceInterval) clearInterval(voiceInterval);
+            isVoicePlaying = false; if (voiceInterval) clearInterval(voiceInterval);
             document.getElementById('voice-icon-play').classList.remove('hidden');
             document.getElementById('voice-icon-pause').classList.add('hidden');
             document.getElementById('voice-waveform').classList.remove('playing');
-            voiceSecondsLeft = 45;
-            document.getElementById('voice-timer').textContent = '0:45';
+            voiceSecondsLeft = 45; document.getElementById('voice-timer').textContent = '0:45';
         }
 
         function renderLowEnergyToggle() {
-            const checkbox = document.getElementById('low-energy-toggle');
-            const track = document.getElementById('toggle-track');
-            const dot = document.getElementById('toggle-dot');
-            const banner = document.getElementById('low-energy-banner');
-            checkbox.checked = state.lowEnergyMode;
-            if (state.lowEnergyMode) {
-                track.classList.replace('bg-gray-700', 'bg-emeraldSoft');
-                dot.style.transform = 'translateX(20px)';
-                banner.classList.remove('hidden');
-            } else {
-                track.classList.replace('bg-emeraldSoft', 'bg-gray-700');
-                dot.style.transform = 'translateX(0px)';
-                banner.classList.add('hidden');
-            }
+            const cb = document.getElementById('low-energy-toggle'); const t = document.getElementById('toggle-track'); const d = document.getElementById('toggle-dot'); const b = document.getElementById('low-energy-banner');
+            cb.checked = state.lowEnergyMode;
+            if (state.lowEnergyMode) { t.classList.replace('bg-gray-700', 'bg-emeraldSoft'); d.style.transform = 'translateX(20px)'; b.classList.remove('hidden'); }
+            else { t.classList.replace('bg-emeraldSoft', 'bg-gray-700'); d.style.transform = 'translateX(0px)'; b.classList.add('hidden'); }
         }
-
-        function toggleLowEnergyMode(isEnabled) {
-            state.lowEnergyMode = isEnabled;
-            saveState();
-            renderLowEnergyToggle();
-            renderHabits();
-        }
+        function toggleLowEnergyMode(e) { state.lowEnergyMode = e; saveState(); renderLowEnergyToggle(); renderHabits(); }
 
         function renderHabits() {
-            const container = document.getElementById('habits-list');
-            container.innerHTML = '';
-            DEFAULT_HABITS.forEach(habit => {
-                const isDone = !!state.completedToday[habit.id];
-                let habitText = state.lowEnergyMode ? habit.lowEnergyText : (state.customTexts[habit.id] || habit.normalText);
+            const c = document.getElementById('habits-list'); c.innerHTML = '';
+            DEFAULT_HABITS.forEach(h => {
+                const isDone = !!state.completedToday[h.id];
+                let text = state.lowEnergyMode ? h.lowEnergyText : (state.customTexts[h.id] || h.normalText);
                 const card = document.createElement('div');
                 card.className = `p-4 rounded-2xl border transition-all flex items-start sm:items-center justify-between gap-3.5 ${isDone ? 'bg-gold/10 border-gold/40' : 'bg-bgDeep/75 border-white/10 hover:border-white/20'}`;
                 card.innerHTML = `
-                    <div class="flex items-start sm:items-center gap-3.5 flex-1 cursor-pointer" onclick="toggleHabitCompletion('${habit.id}')">
+                    <div class="flex items-start sm:items-center gap-3.5 flex-1 cursor-pointer" onclick="toggleHabitCompletion('${h.id}')">
                         <button type="button" class="mt-0.5 sm:mt-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition ${isDone ? 'bg-gold border-gold text-bgDeep font-bold' : 'border-gray-500 hover:border-gold'}">${isDone ? '✓' : ''}</button>
                         <div class="flex-1">
-                            <div class="flex flex-wrap items-center gap-2 mb-1">
-                                <span class="text-[11px] font-semibold uppercase tracking-wider ${isDone ? 'text-gold' : 'text-gray-400'}">${habit.category}</span>
-                                ${state.lowEnergyMode ? '<span class="text-[10px] px-2 py-0.2 rounded-full bg-emeraldSoft/15 text-emeraldSoft">Бережный шаг</span>' : ''}
-                            </div>
-                            <p class="text-xs sm:text-sm font-medium leading-snug ${isDone ? 'line-through text-gray-400' : 'text-white'}">${habitText}</p>
+                            <div class="flex flex-wrap items-center gap-2 mb-1"><span class="text-[11px] font-semibold uppercase tracking-wider ${isDone ? 'text-gold' : 'text-gray-400'}">${h.category}</span>${state.lowEnergyMode ? '<span class="text-[10px] px-2 py-0.2 rounded-full bg-emeraldSoft/15 text-emeraldSoft">Бережно</span>' : ''}</div>
+                            <p class="text-xs sm:text-sm font-medium leading-snug ${isDone ? 'line-through text-gray-400' : 'text-white'}">${text}</p>
                         </div>
                     </div>
-                    <button onclick="openEditHabitModal('${habit.id}')" class="text-gray-400 hover:text-gold p-2 rounded-xl hover:bg-white/5 transition shrink-0 text-xs flex items-center gap-1" title="Заменить привычку"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg><span class="hidden sm:inline">Изменить</span></button>
+                    <button onclick="openEditHabitModal('${h.id}')" class="text-gray-400 hover:text-gold p-2 rounded-xl hover:bg-white/5 transition shrink-0 text-xs" title="Заменить"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></button>
                 `;
-                container.appendChild(card);
+                c.appendChild(card);
             });
         }
 
-        function toggleHabitCompletion(habitId) {
-            const wasDone = state.completedToday[habitId];
-            state.completedToday[habitId] = !wasDone;
+        function toggleHabitCompletion(id) {
+            const wasDone = state.completedToday[id];
+            state.completedToday[id] = !wasDone;
             const todayStr = new Date().toISOString().slice(0, 10);
             if (!wasDone) {
                 state.xp += 15;
-                showHabitFeedback(habitId);
-                if (Object.values(state.completedToday).every(Boolean) && state.lastCompletedDate !== todayStr) {
-                    state.streak += 1;
-                    state.lastCompletedDate = todayStr;
-                }
-            } else {
-                state.xp = Math.max(0, state.xp - 15);
-                document.getElementById('habit-feedback-toast').classList.add('hidden');
-            }
+                showHabitFeedback(id);
+                if (Object.values(state.completedToday).every(Boolean) && state.lastCompletedDate !== todayStr) { state.streak += 1; state.lastCompletedDate = todayStr; }
+            } else { state.xp = Math.max(0, state.xp - 15); document.getElementById('habit-feedback-toast').classList.add('hidden'); }
             saveState(); renderHabits(); renderHeaderStats();
         }
 
-        function showHabitFeedback(habitId) {
-            const habitObj = DEFAULT_HABITS.find(h => h.id === habitId);
-            const pool = FEEDBACK_QUOTES[habitId][state.lowEnergyMode ? 'low' : 'normal'];
-            const randomQuote = pool[Math.floor(Math.random() * pool.length)];
-            document.getElementById('feedback-avatar').textContent = habitObj.curatorInitials;
-            document.getElementById('feedback-author').textContent = `${habitObj.curatorName} · Так держать!`;
-            document.getElementById('feedback-text').textContent = `«${randomQuote}»`;
+        function showHabitFeedback(id) {
+            const h = DEFAULT_HABITS.find(x => x.id === id);
+            const pool = FEEDBACK_QUOTES[id][state.lowEnergyMode ? 'low' : 'normal'];
+            const q = pool[Math.floor(Math.random() * pool.length)];
+            document.getElementById('feedback-avatar').textContent = h.curatorInitials;
+            document.getElementById('feedback-author').textContent = `${h.curatorName} · Так держать!`;
+            document.getElementById('feedback-text').textContent = `«${q}»`;
             document.getElementById('habit-feedback-toast').classList.remove('hidden');
         }
 
-        function openEditHabitModal(habitId) {
-            currentEditingHabitId = habitId;
-            const habitObj = DEFAULT_HABITS.find(h => h.id === habitId);
-            document.getElementById('custom-habit-input').value = state.customTexts[habitId] || habitObj.normalText;
-            const presetsList = document.getElementById('habit-presets-list');
-            presetsList.innerHTML = '';
-            habitObj.presets.forEach(preset => {
-                const btn = document.createElement('button');
-                btn.type = 'button'; btn.className = 'w-full text-left text-xs text-gray-200 hover:text-white p-2.5 rounded-xl bg-bgDeep/70 hover:bg-gold/15 border border-white/5 hover:border-gold/30 transition';
-                btn.textContent = preset; btn.onclick = () => { document.getElementById('custom-habit-input').value = preset; };
-                presetsList.appendChild(btn);
+        function openEditHabitModal(id) {
+            currentEditingHabitId = id;
+            const h = DEFAULT_HABITS.find(x => x.id === id);
+            document.getElementById('custom-habit-input').value = state.customTexts[id] || h.normalText;
+            const p = document.getElementById('habit-presets-list'); p.innerHTML = '';
+            h.presets.forEach(preset => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'w-full text-left text-xs text-gray-200 hover:text-white p-2.5 rounded-xl bg-bgDeep/70 hover:bg-gold/15 border border-white/5 hover:border-gold/30 transition';
+                b.textContent = preset; b.onclick = () => { document.getElementById('custom-habit-input').value = preset; };
+                p.appendChild(b);
             });
             document.getElementById('edit-habit-modal').classList.remove('hidden');
         }
-
         function closeEditHabitModal() { document.getElementById('edit-habit-modal').classList.add('hidden'); currentEditingHabitId = null; }
         function saveCustomHabit() {
             if (!currentEditingHabitId) return;
-            const val = document.getElementById('custom-habit-input').value.trim();
-            if (val) { state.customTexts[currentEditingHabitId] = val; state.lowEnergyMode = false; saveState(); renderLowEnergyToggle(); renderHabits(); }
+            const v = document.getElementById('custom-habit-input').value.trim();
+            if (v) { state.customTexts[currentEditingHabitId] = v; state.lowEnergyMode = false; saveState(); renderLowEnergyToggle(); renderHabits(); }
             closeEditHabitModal();
         }
         function resetSingleHabitToDefault() { if (!currentEditingHabitId) return; state.customTexts[currentEditingHabitId] = null; saveState(); renderHabits(); closeEditHabitModal(); }
 
         function openGroundingModal() { document.getElementById('grounding-modal').classList.remove('hidden'); }
         function closeGroundingModal() { document.getElementById('grounding-modal').classList.add('hidden'); }
-        function toggleGroundingStep(btnEl) {
-            const check = btnEl.querySelector('.step-check');
-            check.classList.toggle('hidden');
-            btnEl.classList.toggle('border-emeraldSoft/50');
-            btnEl.classList.toggle('bg-emeraldSoft/10');
-        }
+        function toggleGroundingStep(b) { const c = b.querySelector('.step-check'); c.classList.toggle('hidden'); b.classList.toggle('border-emeraldSoft/50'); b.classList.toggle('bg-emeraldSoft/10'); }
 
         window.addEventListener('DOMContentLoaded', initAssistant);
     </script>
-
-    <!-- НАШИ ГЛОБАЛЬНЫЕ СКРИПТЫ (Синхронизация и Меню) -->
-    <script src="achievements.js"></script>
     <script src="ui-upgrade.js"></script>
     <script src="bottom-menu.js"></script>
+    <script src="achievements.js"></script>
 </body>
 </html>
