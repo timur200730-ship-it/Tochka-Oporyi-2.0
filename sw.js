@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tochka-opory-cache-v13';
+const CACHE_NAME = 'tochka-opory-cache-v14';
 const ASSETS = [
   './',
   './index.html',
