@@ -1,35 +1,32 @@
 (function(){
   const style = document.createElement('style');
   style.textContent = `
-    body { padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important; }
+    body { padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
     
-    /* Нижнее меню в стиле 2.0 */
     .bottom-nav { 
       position: fixed; bottom: 0; left: 0; right: 0; 
-      background: rgba(22, 25, 32, 0.85); /* Темный фон карточек */
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
-      border-top: 1px solid rgba(212, 175, 55, 0.2); /* Тонкая золотая рамка */
+      background: #161920; /* Темный фон под стиль */
+      border-top: 1px solid rgba(212, 175, 55, 0.2); /* Золотая линия */
       display: flex; justify-content: space-around; align-items: center; 
-      padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); 
-      z-index: 9999; font-family: 'Montserrat', sans-serif; /* Новый шрифт */
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); 
+      z-index: 9999; font-family: 'Montserrat', sans-serif; 
     }
     
     .nav-item { 
       display: flex; flex-direction: column; align-items: center; gap: 4px; 
-      color: #a1a1b5; /* Серый по умолчанию */
-      text-decoration: none; font-size: 10px !important; font-weight: 600; 
+      color: #a1a1b5; 
+      text-decoration: none; font-size: 10px; font-weight: 600; 
       transition: .2s; background: none; border: none; cursor: pointer; 
-      flex: 1; padding: 4px 0; white-space: nowrap !important; 
+      flex: 1; padding: 0; 
     }
     
     .nav-item .icon { 
       display: flex; align-items: center; justify-content: center; 
-      height: 24px; width: 24px; transition: .3s; 
+      height: 22px; width: 22px; transition: .3s; 
     }
     
     .nav-item .icon svg { 
-      width: 24px; height: 24px; display: block;
-      transition: .3s;
+      width: 22px; height: 22px; display: block;
     }
     
     /* Активное состояние (Золотое) */
@@ -45,7 +42,7 @@
     .tools-backdrop.show { opacity: 1; pointer-events: auto; }
     
     .tools-popup { 
-      position: fixed; bottom: calc(90px + env(safe-area-inset-bottom)); left: 50%; 
+      position: fixed; bottom: calc(80px + env(safe-area-inset-bottom)); left: 50%; 
       transform: translateX(-50%) translateY(20px); background: #161920; 
       border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 16px; 
       width: calc(100% - 40px); max-width: 360px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; 
@@ -55,7 +52,7 @@
     .tools-popup.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
     
     .tools-popup a { 
-      padding: 14px 12px; border-radius: 14px; background: rgba(255,255,255,0.03); 
+      padding: 12px; border-radius: 14px; background: rgba(255,255,255,0.03); 
       color: #f3f4f6; text-decoration: none; font-size: 12px; font-weight: 600; 
       display: flex; flex-direction: column; align-items: center; gap: 8px; 
       transition: .2s; text-align: center; border: 1px solid rgba(255,255,255,0.05);
@@ -78,7 +75,6 @@
   const isModules = path.includes('module-') || path.includes('lesson.html');
   const isNotebook = path.includes('notebook.html');
 
-  // Красивые контурные SVG (Feather Icons)
   const getIcon = (pathData, isActive) => `
     <svg viewBox="0 0 24 24" fill="${isActive ? 'currentColor' : 'none'}" fill-opacity="${isActive ? '0.15' : '0'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       ${pathData}
@@ -149,8 +145,8 @@
   const warmWords = [
     "Ты не обязан(а) быть продуктивным(ой) 24/7. Отдых — это тоже важная работа.",
     "Если сейчас тяжело — просто сделай глубокий вдох. Шаг за шагом, ты справишься.",
-    "Твоя ценность не измеряется оценками, лайками или чужим мнением. Ты важен(на) просто так.",
-    "Любая ошибка — это не провал, а данные. Теперь ты знаешь, как делать не надо.",
+    "Твоя ценность не измеряется оценками, лайками или чужим мнением.",
+    "Любая ошибка — это не провал, а данные.",
     "Ты уже здесь. Ты пытаешься разобраться в себе. Это требует огромной смелости.",
     "Не сравнивай свой день 1 с чьим-то днём 100. У каждого свой темп.",
     "Позволь себе сегодня сделать меньше, но почувствовать больше.",
