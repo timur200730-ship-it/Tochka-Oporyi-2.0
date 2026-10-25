@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark-gold">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Магия слов — Точка опоры</title>
+<meta name="theme-color" content="#0f1115" />
+<meta name="description" content="Выбери эмоцию или впиши слово — увидишь его как арт." />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Точка опоры" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+<style>
+  /* Фолбэки, пока ui-upgrade.js не подгрузился */
+  :root {
+    --bg: #0f1115; --bg-2: #161920; --card: rgba(22,25,32,0.88);
+    --text: #f3f4f6; --muted: #a1a1b5; --stroke: rgba(255,255,255,0.09);
+    --accent: #d4af37; --accent-glow: rgba(212,175,55,0.3);
+    --rose: #fb7185;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body {
+    padding-bottom: 110px;
+    background-image:
+      radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--rose) 5%, transparent) 0%, transparent 45%);
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 20px; }
+
+  .page-head { padding: 30px 0 20px; text-align: center; }
+  .page-head h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .page-head h1 .grad {
+    background: linear-gradient(135deg, var(--accent), #f3d266);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .page-head p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Чипсы эмоций */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 24px 0 18px;
+  }
+  .chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .chip.active {
+    background: color-mix(in srgb, var(--accent) 18%, var(--card));
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Своё слово */
+  .custom-form {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 28px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .custom-form input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .custom-form input:focus { border-color: var(--accent); }
+  .custom-form input::placeholder { color: var(--muted); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0f1115;
+    box-shadow: 0 4px 15px var(--accent-glow);
+  }
+  .btn-primary:hover { transform: translateY(-1px); opacity: 0.95; }
+  .btn-ghost {
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  /* Арт-карточка */
+  .art-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+  .art-card {
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 1 / 1;
+    border-radius: 28px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 80px rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .art-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%);
+    pointer-events: none;
+  }
+  .art-emoji {
+    font-size: clamp(72px, 18vw, 110px);
+    line-height: 1;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+    position: relative;
+    z-index: 1;
+    margin-bottom: 14px;
+  }
+  .art-word {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 6vw, 34px);
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .art-source {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    z-index: 1;
+  }
+
+  .art-meta {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: 20px;
+    padding: 20px 22px;
+  }
+  .art-meta .meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .art-meta .meta-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .art-meta .meta-text:last-child { margin-bottom: 0; }
+  .art-meta .meta-text.italic { font-style: italic; color: var(--muted); }
+
+  .art-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Тосты */
+  .toast {
+    position: fixed;
+    bottom: calc(110px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent);
+    color: #0f1115;
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    z-index: 10000;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Пустое состояние */
+  .empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--muted);
+  }
+  .empty .big { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
+  .empty p { font-size: 14px; max-width: 320px; margin: 0 auto; }
+
+  @media (max-width: 480px) {
+    .custom-form { flex-direction: column; }
+    .custom-form .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Пустой header — ui-upgrade.js заменит на универсальную шапку -->
+<header></header>
+
+<main class="container">
+  <div class="page-head">
+    <h1>Магия <span class="grad">слов</span></h1>
+    <p>Выбери эмоцию или впиши своё слово — и увидишь его как арт.</p>
+  </div>
+
+  <!-- Чипсы эмоций -->
+  <section class="chips" id="chips"></section>
+
+  <!-- Своё слово -->
+  <section class="custom-form">
+    <input type="text" id="customWord" maxlength="24" placeholder="Своё слово... (например: надежда)" />
+    <button class="btn btn-primary" id="generateBtn">✨ Сгенерировать</button>
+  </section>
+
+  <!-- Место для арта -->
+  <section id="artArea">
+    <div class="empty" id="emptyState">
+      <div class="big">✨</div>
+      <p>Выбери эмоцию сверху или впиши своё слово — арт появится здесь.</p>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   МАГИЯ СЛОВ — Точка опоры
+   Авторы: Елена Осинцева, Тимур Хайретдинов
+   ============================================================ */
+
+const STORE_KEY = 'emotion_magic_v1';
+
+/* ===== База эмоций ===== */
+const EMOTIONS = [
+  {
+    id: 'fear', word: 'Страх', emoji: '🌑',
+    colors: ['#6C5CE7', '#2D1B69'],
+    metaphor: 'Страх — это охрана. Он показывает границы и подсказывает, где ты растёшь.',
+    action: 'Назови его вслух. Найди, где он живёт в теле. Сделай три вдоха 4-7-8.'
+  },
+  {
+    id: 'anger', word: 'Гнев', emoji: '🔥',
+    colors: ['#FF6B4A', '#7A1F0A'],
+    metaphor: 'Гнев — это энергия, которая защищает что-то важное. Под ним часто — боль.',
+    action: 'Сбрось физику: 20 приседаний или быстрая прогулка. Потом назови нарушенную границу.'
+  },
+  {
+    id: 'sadness', word: 'Грусть', emoji: '🌧',
+    colors: ['#4A90D9', '#0F2A4A'],
+    metaphor: 'Грусть — это не слабость. Это работа души, которая учится отпускать.',
+    action: 'Разреши себе не быть продуктивным. Тепло, плед, тишина. Один человек рядом.'
+  },
+  {
+    id: 'anxiety', word: 'Тревога', emoji: '🌀',
+    colors: ['#F0B429', '#5C3D00'],
+    metaphor: 'Тревога живёт в будущем и питается неопределённостью. Верни себя в «здесь и сейчас».',
+    action: 'Заземлись 5-4-3-2-1. Дыхание 4-7-8. Запиши худший сценарий на бумаге.'
+  },
+  {
+    id: 'shame', word: 'Стыд', emoji: '🫥',
+    colors: ['#B06AB3', '#3D1145'],
+    metaphor: 'Стыд говорит «со мной что-то не так». Но это чувство, а не факт.',
+    action: 'Отдели поступок от личности. Скажи себе то, что сказал бы другу.'
+  },
+  {
+    id: 'guilt', word: 'Вина', emoji: '⚖️',
+    colors: ['#48B89C', '#0C3D33'],
+    metaphor: 'Вина ведёт к исправлению, если она про конкретный поступок. Не превращай её в наказание.',
+    action: 'Определи: за что именно? Есть ли способ исправить? Сделай один шаг.'
+  },
+  {
+    id: 'resentment', word: 'Обида', emoji: '🗝',
+    colors: ['#C97B3C', '#4A2408'],
+    metaphor: 'Обида держится за несправедливость. Она защищает — но застыв, держит тебя в прошлом.',
+    action: 'Напиши письмо без отправки. Назови ожидание. Отдели прощение от примирения.'
+  },
+  {
+    id: 'loneliness', word: 'Одиночество', emoji: '🌙',
+    colors: ['#7C89E8', '#1A1F52'],
+    metaphor: 'Одиночество — это потребность в связи, как голод говорит о еде. Это не поломка.',
+    action: 'Один шаг к связи: напиши, позвони, спроси. Даже «привет» считается.'
+  },
+  {
+    id: 'joy', word: 'Радость', emoji: '☀️',
+    colors: ['#F6C445', '#B45309'],
+    metaphor: 'Радость — это не награда за продуктивность. Это твоё право, просто так.',
+    action: 'Заметь её в теле. Скажи вслух, чему радуешься. Поделись с кем-то.'
+  },
+  {
+    id: 'calm', word: 'Спокойствие', emoji: '🌿',
+    colors: ['#34D399', '#064E3B'],
+    metaphor: 'Спокойствие — это не отсутствие чувств. Это пространство, где они могут быть.',
+    action: 'Побудь в тишине 2 минуты. Почувствуй опору под ногами. Дыши медленно.'
+  }
+];
+
+/* ===== Пул для своих слов ===== */
+const PALETTE = [
+  ['#6C5CE7', '#2D1B69'], ['#FF6B4A', '#7A1F0A'], ['#4A90D9', '#0F2A4A'],
+  ['#F0B429', '#5C3D00'], ['#B06AB3', '#3D1145'], ['#48B89C', '#0C3D33'],
+  ['#C97B3C', '#4A2408'], ['#7C89E8', '#1A1F52'], ['#F6C445', '#B45309'],
+  ['#34D399', '#064E3B'], ['#FB7185', '#881337'], ['#A78BFA', '#4C1D95'],
+  ['#22D3EE', '#0E7490'], ['#F472B6', '#831843'], ['#84CC16', '#365314']
+];
+const EMOJIS = ['🌑','🔥','🌧','🌀','🫥','⚖️','🗝','🌙','☀️','🌿','💫','🌸','🪐','🕯','🧩','🫧','🪷','🌊','🦋','✨','🎈','🔮','🌟','🍃'];
+const METAPHORS = [
+  'Это слово — как погода: она меняется, и это нормально.',
+  'Это слово — как волна: поднимается, накрывает, отступает.',
+  'Это слово — как дверь: за ней что-то важное для тебя.',
+  'Это слово — как компас: показывает, куда смотреть.',
+  'Это слово — как семечко: из него может вырасти что-то новое.',
+  'Это слово — как эхо: оно звучит, пока ты его слушаешь.',
+  'Это слово — как мост: соединяет то, что было, и то, что будет.',
+  'Это слово — как свет: даже слабый, он рассеивает темноту.',
+  'Это слово — как река: у неё есть течение, и можно довериться ему.',
+  'Это слово — как пауза: в ней помещается многое.'
+];
+const PRACTICES = [
+  'Назови это вслух. Названное теряет половину власти.',
+  'Найди, где это живёт в теле. Положи руку туда.',
+  'Сделай три глубоких вдоха и один длинный выдох.',
+  'Запиши в тетрадь, что это слово для тебя значит.',
+  'Спроси себя: что я могу сделать на 5%?',
+  'Позволь себе это чувствовать — без оценок.',
+  'Скажи себе: «Это пройдёт. Я справлюсь».',
+  'Сделай один маленький шаг в сторону заботы о себе.'
+];
+
+/* ===== Хэш для детерминированности ===== */
+function hashString(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h);
+}
+
+/* ===== Сгенерировать арт для своего слова ===== */
+function generateCustomArt(word) {
+  const key = word.trim().toLowerCase();
+  if (!key) return null;
+  const h = hashString(key);
+  return {
+    id: 'custom',
+    word: word.trim(),
+    emoji: EMOJIS[h % EMOJIS.length],
+    colors: PALETTE[(h >> 3) % PALETTE.length],
+    metaphor: METAPHORS[(h >> 6) % METAPHORS.length],
+    action: PRACTICES[(h >> 9) % PRACTICES.length],
+    isCustom: true
+  };
+}
+
+/* ===== Состояние ===== */
+let currentArt = null;
+
+/* ===== Рендер чипсов ===== */
+function renderChips() {
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = EMOTIONS.map(e => `
+    <button class="chip" data-id="${e.id}">
+      <span>${e.emoji}</span><span>${e.word}</span>
+    </button>
+  `).join('');
+  wrap.querySelectorAll('.chip').forEach(btn => {
+    btn.onclick = () => {
+      const e = EMOTIONS.find(x => x.id === btn.dataset.id);
+      if (e) {
+        document.getElementById('customWord').value = '';
+        setActiveChip(btn);
+        showArt(e);
+      }
+    };
+  });
+}
+
+function setActiveChip(activeBtn) {
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  if (activeBtn) activeBtn.classList.add('active');
+}
+
+/* ===== Рендер арта ===== */
+function showArt(art) {
+  if (!art) return;
+  currentArt = art;
+  const [c1, c2] = art.colors;
+  const area = document.getElementById('artArea');
+  const source = art.isCustom ? 'Своё слово' : 'Эмоция';
+  area.innerHTML = `
+    <div class="art-wrap">
+      <div class="art-card" style="background: linear-gradient(150deg, ${c1}, ${c2});">
+        <div class="art-source">${source}</div>
+        <div class="art-emoji">${art.emoji}</div>
+        <div class="art-word">${escapeHtml(art.word)}</div>
+      </div>
+      <div class="art-meta">
+        <div class="meta-label">Метафора</div>
+        <div class="meta-text italic">${escapeHtml(art.metaphor)}</div>
+        <div class="meta-label">Что делать</div>
+        <div class="meta-text">${escapeHtml(art.action)}</div>
+      </div>
+      <div class="art-actions">
+        <button class="btn btn-ghost" onclick="randomArt()">🎲 Ещё раз</button>
+        <button class="btn btn-primary" onclick="saveToNotebook()">📓 В тетрадь</button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+/* ===== Случайная эмоция ===== */
+window.randomArt = function() {
+  const e = EMOTIONS[Math.floor(Math.random() * EMOTIONS.length)];
+  setActiveChip(document.querySelector(`.chip[data-id="${e.id}"]`));
+  document.getElementById('customWord').value = '';
+  showArt(e);
+};
+
+/* ===== Своё слово ===== */
+document.getElementById('generateBtn').onclick = () => {
+  const word = document.getElementById('customWord').value.trim();
+  if (!word) {
+    showToast('Впиши слово или выбери эмоцию');
+    return;
+  }
+  setActiveChip(null);
+  const art = generateCustomArt(word);
+  showArt(art);
+};
+
+document.getElementById('customWord').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('generateBtn').click();
+});
+
+/* ===== Сохранение в тетрадь ===== */
+window.saveToNotebook = function() {
+  if (!currentArt) return;
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e) { saved = []; }
+  saved.unshift({
+    date: Date.now(),
+    word: currentArt.word,
+    emoji: currentArt.emoji,
+    metaphor: currentArt.metaphor,
+    action: currentArt.action,
+    isCustom: !!currentArt.isCustom
+  });
+  saved = saved.slice(0, 50);
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch(e) {}
+  showToast('Сохранено в тетрадь ✨');
+};
+
+/* ===== Тост ===== */
+let toastTimer = null;
+function showToast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ===== Старт ===== */
+renderChips();
+</script>
+
+<script src="ui-upgrade.js"></script>
+<script src="bottom-menu.js"></script>
+</body>
+</html>
