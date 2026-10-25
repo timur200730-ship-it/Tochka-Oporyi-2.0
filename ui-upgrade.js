@@ -6,6 +6,77 @@
 
   const style = document.createElement('style');
   style.textContent = `
+      /* Универсальная шапка */
+    .unified-header {
+      max-width: 768px;
+      margin: 0 auto 24px auto;
+      background: var(--card) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid var(--stroke) !important;
+      border-radius: 20px !important;
+      padding: 0 !important;
+      position: relative !important;
+      top: auto !important;
+    }
+    .unified-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      gap: 12px;
+    }
+    .unified-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .unified-logo-icon {
+      width: 36px;
+      height: 36px;
+      color: var(--accent);
+      transition: transform 0.3s;
+    }
+    .unified-logo:hover .unified-logo-icon {
+      transform: rotate(45deg);
+    }
+    .unified-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .unified-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .unified-sub {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .unified-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .unified-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--stroke);
+      border-radius: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .unified-stat span {
+      color: var(--accent);
+    }
     /* ===== ПЕРЕМЕННЫЕ ТЕМ ===== */
     :root, [data-theme="dark-gold"] {
       --bg: #0f1115; --bg-2: #161920; --card: rgba(22, 25, 32, 0.88);
