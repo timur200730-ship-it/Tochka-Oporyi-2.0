@@ -6,87 +6,13 @@
 
   const style = document.createElement('style');
   style.textContent = `
-      /* Универсальная шапка */
-     .unified-header {
-      max-width: 768px !important;
-      width: calc(100% - 32px) !important;
-      margin: 12px auto 24px auto !important;
-      background: var(--card) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-      border: 1px solid var(--stroke) !important;
-      border-radius: 20px !important;
-      padding: 0 !important;
-      position: relative !important;
-      top: auto !important;
-    }
-    .unified-header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      gap: 12px;
-    }
-    .unified-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .unified-logo-icon {
-      width: 36px;
-      height: 36px;
-      color: var(--accent);
-      transition: transform 0.3s;
-    }
-    .unified-logo:hover .unified-logo-icon {
-      transform: rotate(45deg);
-    }
-    .unified-logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-    .unified-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      font-size: 16px;
-      color: var(--text);
-    }
-    .unified-sub {
-      font-size: 10px;
-      color: var(--muted);
-    }
-    .unified-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .unified-stat {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--bg-2);
-      border: 1px solid var(--stroke);
-      border-radius: 10px;
-      padding: 4px 8px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .unified-stat span {
-      color: var(--accent);
-    }
     /* ===== ПЕРЕМЕННЫЕ ТЕМ ===== */
     :root, [data-theme="dark-gold"] {
       --bg: #0f1115; --bg-2: #161920; --card: rgba(22, 25, 32, 0.88);
       --text: #f3f4f6; --muted: #a1a1b5; --stroke: rgba(255,255,255,0.09);
       --accent: #d4af37; --accent-glow: rgba(212,175,55,0.3);
       --rose: #fb7185;
-      /* для breathing.html */
       --accent-2: #d4af37; --accent-3: #f3d266; --mod: #d4af37;
-      /* для survive-test.html */
       --accent2: #5c4a10;
     }
     [data-theme="light"] {
@@ -122,7 +48,83 @@
     }
     body::before { background: none !important; }
 
-    /* ===== ШАПКИ (breathing + survive-test) ===== */
+    /* ===== ШАПКИ, КОТОРЫЕ НЕ ТРОГАЕМ (с навигацией приложения) ===== */
+    .unified-nav-keep {
+      max-width: 768px !important;
+      width: calc(100% - 32px) !important;
+      margin: 12px auto 24px auto !important;
+      background: var(--card) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid var(--stroke) !important;
+      border-radius: 20px !important;
+      padding: 10px 16px !important;
+      position: relative !important;
+      top: auto !important;
+      box-sizing: border-box !important;
+    }
+
+    /* ===== УНИВЕРСАЛЬНАЯ ШАПКА ===== */
+    .unified-header {
+      max-width: 768px !important;
+      width: calc(100% - 32px) !important;
+      margin: 12px auto 24px auto !important;
+      background: var(--card) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid var(--stroke) !important;
+      border-radius: 20px !important;
+      padding: 0 !important;
+      position: relative !important;
+      top: auto !important;
+      box-sizing: border-box !important;
+      z-index: 10;
+    }
+    .unified-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      gap: 12px;
+    }
+    .unified-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .unified-logo-icon {
+      width: 36px;
+      height: 36px;
+      color: var(--accent);
+      transition: transform 0.3s;
+    }
+    .unified-logo:hover .unified-logo-icon { transform: rotate(45deg); }
+    .unified-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .unified-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .unified-sub { font-size: 10px; color: var(--muted); }
+    .unified-actions { display: flex; align-items: center; gap: 8px; }
+    .unified-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--stroke);
+      border-radius: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .unified-stat span { color: var(--accent); }
+
+    /* ===== ОБЩИЕ ПЕРЕОПРЕДЕЛЕНИЯ ===== */
     header, .nav, #nav {
       background: var(--card) !important;
       border-color: var(--stroke) !important;
@@ -140,19 +142,18 @@
       color: var(--text) !important;
       background: var(--bg-2) !important;
     }
-    .pill, .back-btn {
+    .pill, .back-btn, .close-link {
       background: var(--bg-2) !important;
       border-color: var(--stroke) !important;
       color: var(--text) !important;
     }
     .pill .num { color: var(--accent) !important; }
 
-    /* ===== КАРТОЧКИ И ПАНЕЛИ ===== */
     .glass-card, .tech, .breath-zone, .info-card, .hist-row,
     .option, .step, .phrase, .practice, .note, .rank-row, .mini,
     .hero-result, .card-hero, .module, .lesson, .tcard, .practice-box,
     .quiz-q, .reflect-box, .panel, .stat, .daily-card, .ach-card,
-    .tool-card, .near, .quiz, .challenge-card {
+    .tool-card, .near, .quiz, .challenge-card, .finish-box, .error-box {
       background: var(--card) !important;
       border-color: var(--stroke) !important;
       color: var(--text) !important;
@@ -161,7 +162,6 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
     }
 
-    /* ===== КНОПКИ ===== */
     .btn-primary, .btn, .link-go, .btn-danger {
       background: var(--accent) !important;
       color: #0f1115 !important;
@@ -173,14 +173,13 @@
       border-color: var(--stroke) !important;
       color: var(--text) !important;
     }
-    .tech.active, .option.picked {
+    .tech.active, .option.picked, .step-pill.active {
       border-color: var(--accent) !important;
       background: color-mix(in srgb, var(--accent) 15%, var(--bg-2)) !important;
       box-shadow: 0 8px 24px var(--accent-glow) !important;
     }
     .tech .pattern, .tech .ico { color: var(--accent) !important; }
 
-    /* ===== ТЕКСТЫ ===== */
     h1, h2, h3, h4, .hero-name, .mini-name, .rank-name {
       color: var(--text) !important;
       font-family: 'Playfair Display', serif !important;
@@ -195,17 +194,17 @@
       color: transparent !important;
     }
 
-    /* ===== ПОЛЯ ВВОДА ===== */
     textarea, input {
       background: var(--bg-2) !important;
       color: var(--text) !important;
       border-color: var(--stroke) !important;
     }
 
-    /* ===== ПРОГРЕСС-БАРЫ ===== */
-    .progress-fill, .bar-fill, .fill, .bar i, .rank-bar i {
+    .progress-fill, .bar-fill, .fill, .bar i, .rank-bar i, .top-progress .bar {
       background: var(--accent) !important;
     }
+
+    .top-progress { top: 0 !important; }
 
     /* ===== КНОПКА ТЕМЫ ===== */
     #globalThemeBtn, .theme-toggle-btn, .theme-toggle {
@@ -235,34 +234,29 @@
   function initThemeButton() {
     let btn = document.getElementById('globalThemeBtn');
 
-    // Если есть старая кнопка #themeBtn (survive-test), переименовываем
     if (!btn) {
       const oldBtn = document.getElementById('themeBtn');
       if (oldBtn) {
         oldBtn.id = 'globalThemeBtn';
-        oldBtn.onclick = null; // сбрасываем старый обработчик
-        oldBtn.className = ''; // убираем старые классы
+        oldBtn.onclick = null;
+        oldBtn.className = '';
         btn = oldBtn;
       }
     }
 
-    // Если кнопки нет (breathing), создаём
     if (!btn) {
       btn = document.createElement('button');
       btn.id = 'globalThemeBtn';
       btn.title = 'Сменить тему';
 
       const navUser = document.querySelector('.nav-user');
-      const navLinks = document.querySelector('#nav .nav-links');
-      const headerNav = document.querySelector('header .nav') || document.querySelector('header');
+      const navLinks = document.querySelector('#nav .nav-links') || document.querySelector('.nav-links');
+      const headerNav = document.querySelector('.unified-header-inner') || document.querySelector('header .nav') || document.querySelector('header');
 
-      if (navUser) {
-        navUser.appendChild(btn);
-      } else if (navLinks) {
-        navLinks.appendChild(btn);
-      } else if (headerNav) {
-        headerNav.appendChild(btn);
-      } else {
+      if (navUser) navUser.appendChild(btn);
+      else if (navLinks) navLinks.appendChild(btn);
+      else if (headerNav) headerNav.appendChild(btn);
+      else {
         btn.style.position = 'fixed';
         btn.style.top = '16px';
         btn.style.right = '16px';
@@ -271,7 +265,6 @@
       }
     }
 
-    // Всегда навешиваем свой обработчик
     btn.innerHTML = icons[currentTheme] || '☀️';
     btn.onclick = (e) => {
       e.preventDefault();
@@ -283,20 +276,22 @@
     };
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThemeButton);
-  } else {
-    initThemeButton();
-  }
-    // ===== УНИВЕРСАЛЬНАЯ ШАПКА =====
+  // ===== УНИВЕРСАЛЬНАЯ ШАПКА =====
   function injectUnifiedHeader() {
-    // Не трогаем главную — там своя шапка
+    // Главную не трогаем — там своя шапка
     if (document.getElementById('tochka-opory-assistant')) return;
+    // Уже вставили
+    if (document.querySelector('.unified-header')) return;
 
-    const existingHeader = document.querySelector('header') || document.querySelector('.nav') || document.querySelector('#nav');
-    if (!existingHeader) return;
+    const oldHeader = document.querySelector('header') || document.querySelector('.nav') || document.querySelector('#nav');
+    if (!oldHeader) return;
 
-    // Подтягиваем XP и streak из localStorage
+    // Если в шапке есть навигация приложения — не ломаем её, только приводим к общему виду
+    if (oldHeader.querySelector('.nav-links')) {
+      oldHeader.classList.add('unified-nav-keep');
+      return;
+    }
+
     let xp = 0, streak = 1;
     try {
       const store = JSON.parse(localStorage.getItem('tochka_opory_v1') || '{}');
@@ -304,7 +299,9 @@
       streak = store.streak || 1;
     } catch(e) {}
 
-    const headerHTML = `
+    const wrap = document.createElement('div');
+    wrap.className = 'unified-header';
+    wrap.innerHTML = `
       <div class="unified-header-inner">
         <a href="index.html" class="unified-logo">
           <svg class="unified-logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -318,43 +315,28 @@
           </div>
         </a>
         <div class="unified-actions">
-          <div class="unified-stat">🔥 <span id="unified-streak">${streak}</span></div>
-          <div class="unified-stat">⭐ <span id="unified-xp">${xp}</span></div>
-          <button id="globalThemeBtn" class="theme-toggle-btn">${icons[currentTheme] || '☀️'}</button>
+          <div class="unified-stat">🔥 <span id="navStreak">${streak}</span></div>
+          <div class="unified-stat">⭐ <span id="navXP">${xp}</span></div>
+          <button id="globalThemeBtn" class="theme-toggle-btn" title="Сменить тему">${icons[currentTheme] || '☀️'}</button>
         </div>
       </div>
     `;
 
-    // Если шапка уже в нужном формате — не трогаем
-    if (existingHeader.querySelector('.unified-header-inner')) return;
-
-    // Заменяем содержимое
-    existingHeader.innerHTML = headerHTML;
-    existingHeader.classList.add('unified-header');
-    existingHeader.style.cssText = ''; // сбрасываем старые стили
-
-    // Перевешиваем кнопку темы
-    const btn = existingHeader.querySelector('#globalThemeBtn');
-    if (btn) {
-      btn.onclick = (e) => {
-        e.preventDefault();
-        let idx = THEMES.indexOf(currentTheme);
-        currentTheme = THEMES[(idx + 1) % THEMES.length];
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        localStorage.setItem('global_theme', currentTheme);
-        btn.innerHTML = icons[currentTheme];
-      };
-    }
+    // Вставляем ПЕРЕД старой шапкой и прячем её,
+    // чтобы старые id (navXP, navStreak и т.п.) остались в DOM
+    oldHeader.parentNode.insertBefore(wrap, oldHeader);
+    oldHeader.style.display = 'none';
+    oldHeader.setAttribute('aria-hidden', 'true');
   }
 
-  // Запускаем после DOMContentLoaded (вместе с initThemeButton)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initThemeButton();
-      injectUnifiedHeader();
-    });
-  } else {
-    initThemeButton();
+  function boot() {
     injectUnifiedHeader();
+    initThemeButton();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();
