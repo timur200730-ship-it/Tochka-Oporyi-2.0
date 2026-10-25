@@ -223,7 +223,7 @@
   const backdrop = document.createElement('div');
   backdrop.id = 'toolsBackdrop';
   backdrop.className = 'tools-backdrop';
-  backdrop.onclick = window.toggleTools;
+  backdrop.onclick = function() { window.toggleTools(); };
   document.body.appendChild(backdrop);
 
   const toolsPopup = document.createElement('div');
