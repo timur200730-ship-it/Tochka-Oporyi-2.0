@@ -28,32 +28,35 @@
       --accent: #f59e0b; --accent-glow: rgba(245,158,11,0.4);
     }
 
-    /* ===== ЖЕСТКИЕ ПЕРЕОПРЕДЕЛЕНИЯ ДЛЯ СВЕТЛОЙ ТЕМЫ ===== */
-    [data-theme="light"] body,
-    [data-theme="light"] html { background-color: var(--bg) !important; color: var(--text) !important; background-image: none !important; }
+  /* ===== УНИВЕРСАЛЬНЫЕ ПЕРЕОПРЕДЕЛЕНИЯ (ДЛЯ ВСЕХ ТЕМ) ===== */
+    body, html {
+      background-color: var(--bg) !important;
+      color: var(--text) !important;
+    }
     
-    [data-theme="light"] .glass-card,
-    [data-theme="light"] .glass-card-gold,
-    [data-theme="light"] header,
-    [data-theme="light"] .bottom-nav,
-    [data-theme="light"] .mood-btn,
-    [data-theme="light"] [class*="bg-bgDeep"],
-    [data-theme="light"] [class*="bg-bgCard"] {
-      background-color: var(--card) !important;
-      border-color: var(--stroke) !important;
-      box-shadow: 0 4px 15px rgba(40,20,90,0.05) !important;
+    /* Адаптивный градиент фона (подстраивается под цвет темы) */
+    body {
+      background-image: 
+        radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 45%) !important;
+    }
+    /* В светлой теме убираем свечение, чтобы было чисто */
+    [data-theme="light"] body {
+      background-image: none !important;
     }
 
-    [data-theme="light"] .text-white,
-    [data-theme="light"] .text-gray-100,
-    [data-theme="light"] .text-gray-200 { color: var(--text) !important; }
-    
-    [data-theme="light"] .text-gray-300,
-    [data-theme="light"] .text-gray-400,
-    [data-theme="light"] .text-gray-500 { color: var(--muted) !important; }
+    /* Карточки и панели */
+    .glass-card, .glass-card-gold, header, .bottom-nav, .mood-btn, [class*="bg-bgDeep"], [class*="bg-bgCard"] {
+      background-color: var(--card) !important;
+      border-color: var(--stroke) !important;
+    }
 
-    [data-theme="light"] input,
-    [data-theme="light"] textarea {
+    /* Тексты */
+    .text-white, .text-gray-100, .text-gray-200 { color: var(--text) !important; }
+    .text-gray-300, .text-gray-400, .text-gray-500 { color: var(--muted) !important; }
+
+    /* Инпуты */
+    input, textarea {
       background-color: var(--bg-2) !important;
       color: var(--text) !important;
       border-color: var(--stroke) !important;
