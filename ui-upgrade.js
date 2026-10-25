@@ -216,4 +216,73 @@
   } else {
     initThemeButton();
   }
+    // ===== УНИВЕРСАЛЬНАЯ ШАПКА =====
+  function injectUnifiedHeader() {
+    // Не трогаем главную — там своя шапка
+    if (document.getElementById('tochka-opory-assistant')) return;
+
+    const existingHeader = document.querySelector('header') || document.querySelector('.nav') || document.querySelector('#nav');
+    if (!existingHeader) return;
+
+    // Подтягиваем XP и streak из localStorage
+    let xp = 0, streak = 1;
+    try {
+      const store = JSON.parse(localStorage.getItem('tochka_opory_v1') || '{}');
+      xp = store.xp || 0;
+      streak = store.streak || 1;
+    } catch(e) {}
+
+    const headerHTML = `
+      <div class="unified-header-inner">
+        <a href="index.html" class="unified-logo">
+          <svg class="unified-logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
+            <path d="M50 15 L60 40 L85 50 L60 60 L50 85 L40 60 L15 50 L40 40 Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="50" cy="50" r="8" fill="currentColor"/>
+          </svg>
+          <div class="unified-logo-text">
+            <div class="unified-title">Точка опоры</div>
+            <div class="unified-sub">Твой внутренний компас</div>
+          </div>
+        </a>
+        <div class="unified-actions">
+          <div class="unified-stat">🔥 <span id="unified-streak">${streak}</span></div>
+          <div class="unified-stat">⭐ <span id="unified-xp">${xp}</span></div>
+          <button id="globalThemeBtn" class="theme-toggle-btn">${icons[currentTheme] || '☀️'}</button>
+        </div>
+      </div>
+    `;
+
+    // Если шапка уже в нужном формате — не трогаем
+    if (existingHeader.querySelector('.unified-header-inner')) return;
+
+    // Заменяем содержимое
+    existingHeader.innerHTML = headerHTML;
+    existingHeader.classList.add('unified-header');
+    existingHeader.style.cssText = ''; // сбрасываем старые стили
+
+    // Перевешиваем кнопку темы
+    const btn = existingHeader.querySelector('#globalThemeBtn');
+    if (btn) {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        let idx = THEMES.indexOf(currentTheme);
+        currentTheme = THEMES[(idx + 1) % THEMES.length];
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('global_theme', currentTheme);
+        btn.innerHTML = icons[currentTheme];
+      };
+    }
+  }
+
+  // Запускаем после DOMContentLoaded (вместе с initThemeButton)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initThemeButton();
+      injectUnifiedHeader();
+    });
+  } else {
+    initThemeButton();
+    injectUnifiedHeader();
+  }
 })();
