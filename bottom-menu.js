@@ -5,8 +5,8 @@
     
     .bottom-nav { 
       position: fixed; bottom: 0; left: 0; right: 0; 
-      background: #161920; /* Темный фон под стиль */
-      border-top: 1px solid rgba(212, 175, 55, 0.2); /* Золотая линия */
+      background: #161920;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
       display: flex; justify-content: space-around; align-items: center; 
       padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); 
       z-index: 9999; font-family: 'Montserrat', sans-serif; 
@@ -19,25 +19,16 @@
       transition: .2s; background: none; border: none; cursor: pointer; 
       flex: 1; padding: 0; 
     }
-    
     .nav-item .icon { 
       display: flex; align-items: center; justify-content: center; 
       height: 22px; width: 22px; transition: .3s; 
     }
-    
-    .nav-item .icon svg { 
-      width: 22px; height: 22px; display: block;
-    }
-    
-    /* Активное состояние (Золотое) */
+    .nav-item .icon svg { width: 22px; height: 22px; display: block; }
     .nav-item.active { color: #d4af37; }
     .nav-item.active .icon { transform: translateY(-2px); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6)); }
-    
-    /* Кнопка Помощь (Розовая) */
     .nav-item.help-btn { color: #fb7185; }
     .nav-item.help-btn .icon { filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.5)); }
     
-    /* Всплывающее окно сервисов */
     .tools-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9997; opacity: 0; pointer-events: none; transition: .3s; }
     .tools-backdrop.show { opacity: 1; pointer-events: auto; }
     
@@ -59,7 +50,6 @@
     }
     .tools-popup a:hover { background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
     
-    /* Модалка поддержки */
     .support-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10000; opacity: 0; pointer-events: none; transition: .3s; }
     .support-modal.show { opacity: 1; pointer-events: auto; }
     .support-card { background: #161920; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 30px; max-width: 340px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(20px); transition: .3s; }
@@ -67,6 +57,114 @@
     .support-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: #d4af37; margin-bottom: 12px; }
     .support-card p { font-size: 14px; color: #f3f4f6; line-height: 1.6; margin-bottom: 20px; }
     .support-card button { background: #d4af37; border: none; padding: 12px 20px; border-radius: 12px; color: #0f1115; font-weight: 700; cursor: pointer; width: 100%; font-family: 'Montserrat', sans-serif; }
+
+    /* ============ НОВОЕ: ФУТЕР О ПРОЕКТЕ ============ */
+    .project-footer {
+      max-width: 768px;
+      margin: 40px auto 20px auto;
+      padding: 0 16px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .footer-inner {
+      background: var(--card, rgba(22, 25, 32, 0.88));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--stroke, rgba(255,255,255,0.09));
+      border-radius: 24px;
+      padding: 22px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .footer-mission {
+      text-align: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--stroke, rgba(255,255,255,0.09));
+    }
+    .footer-icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .footer-mission h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--text, #f3f4f6);
+      margin-bottom: 8px;
+    }
+    .footer-mission p {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--muted, #a1a1b5);
+      margin-bottom: 6px;
+    }
+    .footer-slogan {
+      font-style: italic;
+      color: var(--accent, #d4af37) !important;
+      font-size: 12px !important;
+      margin-top: 8px !important;
+      font-weight: 600;
+    }
+    .footer-authors {
+      padding: 18px 0;
+    }
+    .footer-authors h4 {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent, #d4af37);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .author-card {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .author-card:last-child { margin-bottom: 0; }
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--accent, #d4af37) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent, #d4af37) 40%, transparent);
+      color: var(--accent, #d4af37);
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text, #f3f4f6);
+      margin-bottom: 2px;
+    }
+    .author-role {
+      font-size: 11.5px;
+      color: var(--accent, #d4af37);
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+    .author-sub {
+      font-size: 11px;
+      color: var(--muted, #a1a1b5);
+      line-height: 1.4;
+    }
+    .footer-bottom {
+      padding-top: 16px;
+      border-top: 1px solid var(--stroke, rgba(255,255,255,0.09));
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted, #a1a1b5);
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+    @media (max-width: 480px) {
+      .footer-inner { padding: 18px 16px; }
+      .author-avatar { width: 36px; height: 36px; font-size: 13px; }
+    }
   `;
   document.head.appendChild(style);
 
@@ -88,7 +186,7 @@
       <span class="icon">${getIcon('<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>', isHome)}</span>
       <span>Главная</span>
     </a>
-    <a href="index.html#modules" class="nav-item ${isModules ? 'active' : ''}">
+    <a href="index.html#modules" class="nav-item ${isModules ? 'active' : ''}" id="navModulesLink">
       <span class="icon">${getIcon('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h8"/>', isModules)}</span>
       <span>Модули</span>
     </a>
@@ -106,6 +204,21 @@
     </button>
   `;
   document.body.appendChild(nav);
+
+  /* НОВОЕ: обработчик кнопки «Модули» — плавный скролл на главной */
+  const modulesLink = document.getElementById('navModulesLink');
+  if (modulesLink) {
+    modulesLink.addEventListener('click', function(e) {
+      if (isHome) {
+        e.preventDefault();
+        const target = document.getElementById('modules');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      // если не на главной — обычный переход на index.html#modules
+    });
+  }
 
   const backdrop = document.createElement('div');
   backdrop.id = 'toolsBackdrop';
@@ -141,6 +254,44 @@
     </div>
   `;
   document.body.appendChild(supportModal);
+
+  /* НОВОЕ: футер о проекте и авторах — вставляем перед нижним меню */
+  const footer = document.createElement('footer');
+  footer.className = 'project-footer';
+  footer.innerHTML = `
+    <div class="footer-inner">
+      <div class="footer-mission">
+        <div class="footer-icon">🧭</div>
+        <h3>Точка опоры</h3>
+        <p>Бесплатное приложение для студентов — про финансы, психологию и поддержку. Практика вместо лекций, маленькие шаги вместо перфекционизма.</p>
+        <p class="footer-slogan">«Твой внутренний компас в мире дедлайнов»</p>
+      </div>
+      <div class="footer-authors">
+        <h4>Авторы проекта</h4>
+        <div class="author-card">
+          <div class="author-avatar">ЕО</div>
+          <div>
+            <div class="author-name">Елена Осинцева</div>
+            <div class="author-role">Преподаватель, психолог</div>
+            <div class="author-sub">Автор курсов · Куратор модулей «Психология» и «Поддержка»</div>
+          </div>
+        </div>
+        <div class="author-card">
+          <div class="author-avatar">ТХ</div>
+          <div>
+            <div class="author-name">Тимур Хайретдинов</div>
+            <div class="author-role">Преподаватель, коуч, экономист</div>
+            <div class="author-sub">Высшее экономическое образование · Куратор модуля «Финансы»</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 Точка опоры · Бесплатно для студентов<br>
+        Сделано с заботой о тех, кто учится
+      </div>
+    </div>
+  `;
+  document.body.insertBefore(footer, nav);
 
   const warmWords = [
     "Ты не обязан(а) быть продуктивным(ой) 24/7. Отдых — это тоже важная работа.",
