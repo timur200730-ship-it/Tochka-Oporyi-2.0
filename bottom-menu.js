@@ -3,19 +3,21 @@
   style.textContent = `
     body { padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important; }
     
+    /* Нижнее меню в стиле 2.0 */
     .bottom-nav { 
       position: fixed; bottom: 0; left: 0; right: 0; 
-      background: rgba(11, 11, 18, 0.85); 
+      background: rgba(22, 25, 32, 0.85); /* Темный фон карточек */
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
-      border-top: 1px solid rgba(255,255,255,0.08); 
+      border-top: 1px solid rgba(212, 175, 55, 0.2); /* Тонкая золотая рамка */
       display: flex; justify-content: space-around; align-items: center; 
       padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); 
-      z-index: 9999; font-family: 'Inter', sans-serif; 
+      z-index: 9999; font-family: 'Montserrat', sans-serif; /* Новый шрифт */
     }
     
     .nav-item { 
       display: flex; flex-direction: column; align-items: center; gap: 4px; 
-      color: #a1a1b5; text-decoration: none; font-size: 10px !important; font-weight: 600; 
+      color: #a1a1b5; /* Серый по умолчанию */
+      text-decoration: none; font-size: 10px !important; font-weight: 600; 
       transition: .2s; background: none; border: none; cursor: pointer; 
       flex: 1; padding: 4px 0; white-space: nowrap !important; 
     }
@@ -30,30 +32,44 @@
       transition: .3s;
     }
     
-    /* Активное состояние */
-    .nav-item.active { color: #d4af37; } /* Золотой вместо бирюзового */
-    .nav-item.active .icon { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6)); }
-    .nav-item.help-btn { color: #fb7185; } /* Розовый */
+    /* Активное состояние (Золотое) */
+    .nav-item.active { color: #d4af37; }
+    .nav-item.active .icon { transform: translateY(-2px); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6)); }
     
-    /* Кнопка Помощь (розовая) */
-    .nav-item.help-btn { color: #ff5c8a; }
-    .nav-item.help-btn .icon { filter: drop-shadow(0 0 10px rgba(255,92,138,0.5)); }
+    /* Кнопка Помощь (Розовая) */
+    .nav-item.help-btn { color: #fb7185; }
+    .nav-item.help-btn .icon { filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.5)); }
     
-    .tools-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 9997; opacity: 0; pointer-events: none; transition: .3s; }
+    /* Всплывающее окно сервисов */
+    .tools-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9997; opacity: 0; pointer-events: none; transition: .3s; }
     .tools-backdrop.show { opacity: 1; pointer-events: auto; }
     
-    .tools-popup { position: fixed; bottom: calc(90px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(20px); background: #1c1c24; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 16px; width: calc(100% - 40px); max-width: 360px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); opacity: 0; pointer-events: none; transition: .3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9998; }
+    .tools-popup { 
+      position: fixed; bottom: calc(90px + env(safe-area-inset-bottom)); left: 50%; 
+      transform: translateX(-50%) translateY(20px); background: #161920; 
+      border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 16px; 
+      width: calc(100% - 40px); max-width: 360px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8); opacity: 0; pointer-events: none; 
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9998; 
+    }
     .tools-popup.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-    .tools-popup a { padding: 14px 12px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #f2f2f7; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: .2s; text-align: center; }
-    .tools-popup a:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
     
-    .support-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10000; opacity: 0; pointer-events: none; transition: .3s; }
+    .tools-popup a { 
+      padding: 14px 12px; border-radius: 14px; background: rgba(255,255,255,0.03); 
+      color: #f3f4f6; text-decoration: none; font-size: 12px; font-weight: 600; 
+      display: flex; flex-direction: column; align-items: center; gap: 8px; 
+      transition: .2s; text-align: center; border: 1px solid rgba(255,255,255,0.05);
+    }
+    .tools-popup a:hover { background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
+    
+    /* Модалка поддержки */
+    .support-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10000; opacity: 0; pointer-events: none; transition: .3s; }
     .support-modal.show { opacity: 1; pointer-events: auto; }
-    .support-card { background: linear-gradient(135deg, rgba(30,30,40,0.95), rgba(20,20,30,0.95)); border: 1px solid rgba(255,92,138,0.3); border-radius: 24px; padding: 30px; max-width: 340px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: translateY(20px); transition: .3s; }
+    .support-card { background: #161920; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 30px; max-width: 340px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(20px); transition: .3s; }
     .support-modal.show .support-card { transform: translateY(0); }
-    .support-card h3 { font-size: 18px; color: #ff9dba; margin-bottom: 12px; }
-    .support-card p { font-size: 15px; color: #f2f2f7; line-height: 1.6; margin-bottom: 20px; }
-    .support-card button { background: rgba(255,255,255,0.1); border: none; padding: 10px 20px; border-radius: 12px; color: #fff; font-weight: 600; cursor: pointer; width: 100%; }
+    .support-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: #d4af37; margin-bottom: 12px; }
+    .support-card p { font-size: 14px; color: #f3f4f6; line-height: 1.6; margin-bottom: 20px; }
+    .support-card button { background: #d4af37; border: none; padding: 12px 20px; border-radius: 12px; color: #0f1115; font-weight: 700; cursor: pointer; width: 100%; font-family: 'Montserrat', sans-serif; }
   `;
   document.head.appendChild(style);
 
@@ -62,9 +78,9 @@
   const isModules = path.includes('module-') || path.includes('lesson.html');
   const isNotebook = path.includes('notebook.html');
 
-  // Красивые Duotone SVG (контур + заливка)
+  // Красивые контурные SVG (Feather Icons)
   const getIcon = (pathData, isActive) => `
-    <svg viewBox="0 0 24 24" fill="${isActive ? 'currentColor' : 'none'}" fill-opacity="${isActive ? '0.2' : '0'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="${isActive ? 'currentColor' : 'none'}" fill-opacity="${isActive ? '0.15' : '0'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       ${pathData}
     </svg>
   `;
@@ -123,9 +139,9 @@
   supportModal.className = 'support-modal';
   supportModal.innerHTML = `
     <div class="support-card">
-      <h3>🤍 Мы рядом</h3>
+      <h3>Мы рядом 💛</h3>
       <p id="supportText">Ты уже проделал(а) большой путь. Даже если сейчас кажется, что стоишь на месте — ты дышишь, а значит, продолжаешь жить. Сделай глубокий вдох. Ты справишься.</p>
-      <button onclick="document.getElementById('supportModal').classList.remove('show')">Спасибо 💛</button>
+      <button onclick="document.getElementById('supportModal').classList.remove('show')">Спасибо</button>
     </div>
   `;
   document.body.appendChild(supportModal);
