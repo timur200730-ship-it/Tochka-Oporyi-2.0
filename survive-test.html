@@ -289,7 +289,6 @@ h2{letter-spacing:-.025em}
     <a data-nav="home">Тест</a>
     <a data-nav="result">Моё чувство</a>
     <a data-nav="deck">Карты</a>
-    <button class="theme-toggle" id="themeBtn">☾</button>
   </div>
 </nav>
 
@@ -563,23 +562,6 @@ const STORE = {
 const TEST_KEY = 'feel_test_v1';
 const currentScreen = { name:'home' };
 
-/* ============ ТЕМА ============ */
-function initTheme(){
-  const saved = STORE.get('theme', 'dark');
-  document.documentElement.dataset.theme = saved;
-  updateThemeBtn();
-}
-function toggleTheme(){
-  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = next;
-  STORE.set('theme', next);
-  updateThemeBtn();
-}
-function updateThemeBtn(){
-  const b = $('#themeBtn');
-  if(!b) return;
-  b.textContent = document.documentElement.dataset.theme === 'dark' ? '☾' : '☀';
-}
 
 /* ============ НАВИГАЦИЯ ============ */
 function showScreen(name, opts={}){
@@ -620,7 +602,6 @@ function renderHome(){
   $('#test').classList.remove('show');
   $('#test').innerHTML = '';
   testState = null;
-  setAccent('#8B7CF6', '#2D1B69');
   document.title = 'Пережить — тест и карты чувств';
 }
 
@@ -706,7 +687,6 @@ function renderResult(){
   }
 
   const top = EMOTIONS[res.top];
-  setAccent(top.color, top.color2);
 
   mount.innerHTML = `
     <div class="hero-result reveal" style="--c:${top.color};--c2:${top.color2}">
@@ -768,7 +748,6 @@ function renderCard(id){
     return;
   }
 
-  setAccent(e.color, e.color2);
   document.title = `${e.name} — Пережить`;
 
   mount.innerHTML = `
@@ -894,9 +873,7 @@ function bindNavHome(root){
 
 /* ============ СТАРТ ============ */
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-
-  $('#themeBtn').onclick = toggleTheme;
+ 
   $('#start-btn').onclick = startTest;
 
   $$('.nav-links a').forEach(a => {
