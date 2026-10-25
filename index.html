@@ -994,5 +994,43 @@
     <script src="ui-upgrade.js"></script>
     <script src="bottom-menu.js"></script>
     <script src="achievements.js"></script>
+            <style>
+  /* ВРЕМЕННЫЙ ЖЁСТКИЙ ФИКС СВЕТЛОЙ ТЕМЫ ДЛЯ ГЛАВНОЙ */
+  html[data-theme="light"] body {
+    background-color: #F6F4FB !important;
+    color: #171233 !important;
+    background-image: none !important;
+  }
+  html[data-theme="light"] .glass-card,
+  html[data-theme="light"] .glass-card-gold,
+  html[data-theme="light"] .mood-btn,
+  html[data-theme="light"] [class*="bg-bgDeep"] {
+    background-color: #ffffff !important;
+    border-color: rgba(20, 10, 50, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(40, 20, 90, 0.05) !important;
+  }
+  html[data-theme="light"] .text-white,
+  html[data-theme="light"] .text-gray-100,
+  html[data-theme="light"] .text-gray-200,
+  html[data-theme="light"] .text-gray-300 {
+    color: #171233 !important;
+  }
+  html[data-theme="light"] .text-gray-400,
+  html[data-theme="light"] .text-gray-500 {
+    color: #4A4266 !important;
+  }
+  html[data-theme="light"] .text-gold {
+    color: #8B7CF6 !important; /* Фиолетовый акцент для светлой темы */
+  }
+  html[data-theme="light"] input,
+  html[data-theme="light"] textarea {
+    background-color: #F6F4FB !important;
+    color: #171233 !important;
+    border-color: rgba(20, 10, 50, 0.15) !important;
+  }
+  html[data-theme="light"] #toggle-track {
+    background-color: #EDE9F7 !important;
+  }
+</style>
 </body>
 </html>
