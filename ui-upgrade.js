@@ -148,11 +148,15 @@
       text-decoration: none;
       color: var(--text);
     }
+    .unified-logo svg,
     .unified-logo-icon {
-      width: 36px;
-      height: 36px;
+      width: 36px !important;
+      height: 36px !important;
+      max-width: 36px !important;
+      max-height: 36px !important;
       color: var(--accent);
       transition: transform 0.3s;
+      display: block;
     }
     .unified-logo:hover .unified-logo-icon { transform: rotate(45deg); }
     .unified-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
@@ -358,7 +362,7 @@
     wrap.innerHTML = `
       <div class="unified-header-inner">
         <a href="index.html" class="unified-logo">
-          <svg class="unified-logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="unified-logo-icon" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="3" stroke-dasharray="10 5"/>
             <path d="M50 15 L60 40 L85 50 L60 60 L50 85 L40 60 L15 50 L40 40 Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
             <circle cx="50" cy="50" r="8" fill="currentColor"/>
