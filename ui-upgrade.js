@@ -28,38 +28,64 @@
       --accent: #f59e0b; --accent-glow: rgba(245,158,11,0.4);
     }
 
-  /* ===== УНИВЕРСАЛЬНЫЕ ПЕРЕОПРЕДЕЛЕНИЯ (ДЛЯ ВСЕХ ТЕМ) ===== */
-    body, html {
-      background-color: var(--bg) !important;
-      color: var(--text) !important;
-    }
-    
-    /* Адаптивный градиент фона (подстраивается под цвет темы) */
-    body {
-      background-image: 
-        radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 45%) !important;
-    }
-    /* В светлой теме убираем свечение, чтобы было чисто */
-    [data-theme="light"] body {
+    /* ===== ЖЁСТКИЙ ФИКС СВЕТЛОЙ ТЕМЫ (ПЕРЕБИВАЕТ TAILWIND) ===== */
+    html[data-theme="light"] body {
+      background-color: #F6F4FB !important;
+      color: #171233 !important;
       background-image: none !important;
     }
 
-    /* Карточки и панели */
-    .glass-card, .glass-card-gold, header, .bottom-nav, .mood-btn, [class*="bg-bgDeep"], [class*="bg-bgCard"] {
-      background-color: var(--card) !important;
-      border-color: var(--stroke) !important;
+    /* Все карточки на главной становятся белыми */
+    html[data-theme="light"] .glass-card,
+    html[data-theme="light"] .glass-card-gold,
+    html[data-theme="light"] .mood-btn,
+    html[data-theme="light"] #habits-list > div,
+    html[data-theme="light"] [class*="bg-bgDeep"],
+    html[data-theme="light"] [class*="bg-bgCard"] {
+      background-color: #ffffff !important;
+      border-color: rgba(20, 10, 50, 0.1) !important;
+      box-shadow: 0 4px 15px rgba(40, 20, 90, 0.05) !important;
     }
 
-    /* Тексты */
-    .text-white, .text-gray-100, .text-gray-200 { color: var(--text) !important; }
-    .text-gray-300, .text-gray-400, .text-gray-500 { color: var(--muted) !important; }
+    /* Вложенные блоки (например, голосовая заметка) */
+    html[data-theme="light"] [class*="bg-black"],
+    html[data-theme="light"] .bg-black\/40 {
+      background-color: #F6F4FB !important;
+      border-color: rgba(20, 10, 50, 0.1) !important;
+    }
 
-    /* Инпуты */
-    input, textarea {
-      background-color: var(--bg-2) !important;
-      color: var(--text) !important;
-      border-color: var(--stroke) !important;
+    /* Белый текст делаем тёмным */
+    html[data-theme="light"] .text-white,
+    html[data-theme="light"] .text-gray-100,
+    html[data-theme="light"] .text-gray-200,
+    html[data-theme="light"] .text-gray-300 {
+      color: #171233 !important;
+    }
+
+    /* Серый текст делаем ещё темнее для читаемости */
+    html[data-theme="light"] .text-gray-400,
+    html[data-theme="light"] .text-gray-500 {
+      color: #4A4266 !important;
+    }
+
+    /* Золотой акцент в светлой теме становится фиолетовым */
+    html[data-theme="light"] .text-gold { color: var(--accent) !important; }
+
+    /* Инпуты, текстбоксы */
+    html[data-theme="light"] input,
+    html[data-theme="light"] textarea {
+      background-color: #F6F4FB !important;
+      color: #171233 !important;
+      border-color: rgba(20, 10, 50, 0.15) !important;
+    }
+    html[data-theme="light"] input::placeholder,
+    html[data-theme="light"] textarea::placeholder { color: #8A82A8 !important; }
+
+    /* Трек переключателя "Нет сил" и прогресс-бары */
+    html[data-theme="light"] #toggle-track,
+    html[data-theme="light"] .bg-gray-700,
+    html[data-theme="light"] .bg-bgDeep.rounded-full {
+      background-color: #EDE9F7 !important;
     }
 
     /* ===== КНОПКА ТЕМЫ ===== */
@@ -88,14 +114,12 @@
     document.documentElement.setAttribute('data-theme', currentTheme);
     localStorage.setItem('global_theme', currentTheme);
     
-    // Обновляем иконку на всех возможных кнопках
-    const btns = document.querySelectorAll('#globalThemeBtn, .theme-toggle-btn');
-    btns.forEach(b => b.innerHTML = icons[currentTheme]);
+    document.querySelectorAll('#globalThemeBtn, .theme-toggle-btn').forEach(b => b.innerHTML = icons[currentTheme]);
   };
 
   // ===== ИНИЦИАЛИЗАЦИЯ ШАПКИ =====
   function initHeader() {
-    // 1. Если мы на ГЛАВНОЙ странице (там своя красивая шапка)
+    // 1. Если мы на ГЛАВНОЙ странице
     if (document.getElementById('tochka-opory-assistant')) {
       const btn = document.getElementById('globalThemeBtn');
       if (btn) {
@@ -105,11 +129,10 @@
       return;
     }
 
-    // 2. Если мы на ДРУГОЙ странице (инструменты, уроки, магия слов)
+    // 2. Если мы на ДРУГОЙ странице
     const oldHeader = document.querySelector('header');
     if (oldHeader) oldHeader.style.display = 'none';
 
-    // Создаем шапку со встроенными стилями, чтобы она НИКОГДА не ломалась
     const wrap = document.createElement('div');
     wrap.style.cssText = `
       max-width: 768px; width: calc(100% - 32px); margin: 12px auto 24px auto;
