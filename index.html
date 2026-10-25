@@ -452,10 +452,10 @@
         let currentEditingHabitId = null; let voiceInterval = null; let voiceSecondsLeft = 45; let isVoicePlaying = false;
 
         function initAssistant() {
-            loadState(); updateTimeGreeting(); renderHeaderStats(); renderLowEnergyToggle(); renderHabits(); renderModulesProgress();
-            if (state.selectedMood && MOOD_DATA[state.selectedMood]) selectMood(state.selectedMood, true);
-            initVoiceOfDay();
-        }
+    loadState(); updateTimeGreeting(); renderHeaderStats(); renderLowEnergyToggle(); renderHabits(); renderModulesProgress();
+    if (state.selectedMood && MOOD_DATA[state.selectedMood]) selectMood(state.selectedMood, true);
+    initVoiceOfDay();
+}
         }
         // ===== ГОЛОС КУРАТОРА ДНЯ =====
         function initVoiceOfDay() {
@@ -611,12 +611,39 @@
         }
 
         function renderLowEnergyToggle() {
-            const cb = document.getElementById('low-energy-toggle'); const t = document.getElementById('toggle-track'); const d = document.getElementById('toggle-dot'); const b = document.getElementById('low-energy-banner');
-            cb.checked = state.lowEnergyMode;
-            if (state.lowEnergyMode) { t.classList.replace('bg-gray-700', 'bg-emeraldSoft'); d.style.transform = 'translateX(20px)'; b.classList.remove('hidden'); }
-            else { t.classList.replace('bg-emeraldSoft', 'bg-gray-700'); d.style.transform = 'translateX(0px)'; b.classList.add('hidden'); }
+    const cb = document.getElementById('low-energy-toggle');
+    const t  = document.getElementById('toggle-track');
+    const d  = document.getElementById('toggle-dot');
+    const b  = document.getElementById('low-energy-banner');
+
+    console.log('[LowEnergy] render, elements:', {
+        cb: !!cb, t: !!t, d: !!d, b: !!b, mode: state.lowEnergyMode
+    });
+
+    if (cb) cb.checked = state.lowEnergyMode;
+    if (t && d && b) {
+        if (state.lowEnergyMode) {
+            t.classList.replace('bg-gray-700', 'bg-emeraldSoft');
+            d.style.transform = 'translateX(20px)';
+            b.classList.remove('hidden');
+        } else {
+            t.classList.replace('bg-emeraldSoft', 'bg-gray-700');
+            d.style.transform = 'translateX(0px)';
+            b.classList.add('hidden');
         }
-        function toggleLowEnergyMode(e) { state.lowEnergyMode = e; saveState(); renderLowEnergyToggle(); renderHabits(); }
+    }
+}
+        function toggleLowEnergyMode(e) {
+    try {
+        state.lowEnergyMode = e;
+        saveState();
+        renderLowEnergyToggle();
+        renderHabits();
+        console.log('[LowEnergy] toggled to', e);
+    } catch(err) {
+        console.error('[LowEnergy] ERROR:', err);
+    }
+}
 
         function renderHabits() {
             const c = document.getElementById('habits-list'); c.innerHTML = '';
