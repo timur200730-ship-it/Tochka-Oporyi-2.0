@@ -632,7 +632,7 @@
         }
     }
 }
-        function toggleLowEnergyMode(e) {
+        window.toggleLowEnergyMode = function(e) {
     try {
         state.lowEnergyMode = e;
         saveState();
